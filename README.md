@@ -17,3 +17,11 @@
   - JUnit5
 - Restful API
 - 포트번호 : 9090
+
+## H2 데이터베이스 설정 방법
+- 초기 설정
+  - jdbc:h2:~/momopet
+- 아래 파일 만들어진거 확인
+  - ~/momopet.mv.db
+- 상시 접속 url
+  - jdbc:h2:tcp://localhost/~/momopet
