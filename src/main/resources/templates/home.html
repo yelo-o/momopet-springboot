@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header">
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+    <!-- Start Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-5">
+                    <div class="intro-excerpt">
+                        <h1>Momopet <br><span clsas="d-block">Loves your pet</span></h1>
+                        <p class="mb-5">혼자 남겨진 반려동물을 생각하며, 외출을 망설인 적이 있으신가요? <br>
+                            이제 MOMOPET에서 돌봄님에게 맡기고, <br> 여러분의 소중한 일상을 마음 편히 보내세요.</p>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="hero-img-wrap">
+                        <img src="images/dogAndCat.webp" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Hero Section -->
+
+    <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+</body>
+</html>
