@@ -18,7 +18,7 @@ public class Member {
     @Column(name="member_id")
     private Long id;
 
-    private String loginId; //로그인 아이디
+    private String email;; //로그인 아이디
     private String pwd; //로그인 패스워드
     private String introduce; //회원가입
 
