@@ -3,7 +3,6 @@ package com.momo.domain.member;
 import com.momo.domain.Board;
 import com.momo.domain.Item;
 import com.momo.domain.Order;
-import com.momo.domain.PrivateInformation;
 import lombok.Getter;
 import lombok.Setter;
 
