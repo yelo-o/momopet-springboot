@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class MemberForm {
 
-    private String loginId;
     private String pwd;
 
     private String name;
