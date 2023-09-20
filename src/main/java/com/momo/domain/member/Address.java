@@ -1,4 +1,4 @@
-package com.momo.domain;
+package com.momo.domain.member;
 
 import lombok.Getter;
 
