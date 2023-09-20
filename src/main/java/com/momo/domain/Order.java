@@ -1,8 +1,11 @@
 package com.momo.domain;
 
+import net.bytebuddy.asm.Advice;
+
 import com.momo.domain.member.Member;
 import lombok.Getter;
 import lombok.Setter;
+
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +18,7 @@ import java.util.List;
 public class Order {
 
     @Id @GeneratedValue
-    @Column(name="order_id")
+    @Column(name = "order_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -30,7 +33,7 @@ public class Order {
     private LocalDateTime endDate; //시팅 끝나는 date
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status; //주문 상태 [PENDING, APPROVED, REJECTED, COMPLETED]
+    private OrderStatus status; //주문 상태 [PENDING, ACCEPTED, DECLINED, COMPLETED]
 
     @OneToOne(mappedBy = "order")
     private Review review;
