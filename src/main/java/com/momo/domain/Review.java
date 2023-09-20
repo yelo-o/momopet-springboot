@@ -14,12 +14,13 @@ public class Review {
     @Column(name = "review_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
-
     private int rating;
-    private String content;
+    private int content;
+
     private LocalDateTime postingDate;
+
 }
