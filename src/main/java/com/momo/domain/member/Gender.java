@@ -1,5 +1,7 @@
 package com.momo.domain.member;
 
 public enum Gender {
-    MALE, FEMALE
+
+    FEMAL, MALE
+
 }

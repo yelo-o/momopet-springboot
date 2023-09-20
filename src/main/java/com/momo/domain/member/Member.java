@@ -1,6 +1,12 @@
 package com.momo.domain.member;
 
+
 import com.momo.domain.*;
+
+import com.momo.domain.Board;
+import com.momo.domain.Item;
+import com.momo.domain.Order;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,12 +22,8 @@ public class Member {
     @Column(name="member_id")
     private Long id;
 
-<<<<<<< Updated upstream:src/main/java/com/momo/domain/Member.java
-    private String loginId;
-=======
     private String email;; //로그인 아이디
     private String pwd; //로그인 패스워드
->>>>>>> Stashed changes:src/main/java/com/momo/domain/member/Member.java
 
     private String pwd;
 
@@ -29,7 +31,7 @@ public class Member {
     private MemberType membertype;
 
     @Embedded
-    private PrivateInfo privateInfo;
+    private PrivateInformation privateInformation;
 
     @OneToMany(mappedBy = "owner")
     private List<Pet> pets = new ArrayList<>();
