@@ -1,5 +1,6 @@
-package com.momo.domain;
+package com.momo.domain.member;
 
+import com.momo.domain.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,12 @@ public class Member {
     @Column(name="member_id")
     private Long id;
 
+<<<<<<< Updated upstream:src/main/java/com/momo/domain/Member.java
     private String loginId;
+=======
+    private String email;; //로그인 아이디
+    private String pwd; //로그인 패스워드
+>>>>>>> Stashed changes:src/main/java/com/momo/domain/member/Member.java
 
     private String pwd;
 
