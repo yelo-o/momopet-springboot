@@ -1,6 +1,5 @@
 package com.momo.domain;
 
 public enum OrderStatus {
-
-    PENDING, APPROVED, REJECTED, COMPLETED
+    PENDING, APPROVED, DECLINED, COMPLETED
 }

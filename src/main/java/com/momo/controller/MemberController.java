@@ -41,7 +41,7 @@ public class MemberController {
         PrivateInformation privateInformation = new PrivateInformation(form.getName(), form.getEmail(), form.getBirthDate(), form.getGender(), form.getAddress(), form.getPhoneNumber());
 
         Member member = new Member();
-        member.setLoginId(form.getLoginId());
+        member.setEmail(form.getEmail());
         member.setPrivateInformation(privateInformation);
 
         memberService.join(member);

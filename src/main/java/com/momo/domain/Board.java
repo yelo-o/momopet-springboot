@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-
 public class Board {
+
     @Id @GeneratedValue
     @Column(name = "board_id")
     private Long id;
