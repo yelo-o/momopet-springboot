@@ -1,8 +1,12 @@
 package com.momo.domain.member;
 
+
+import com.momo.domain.*;
+
 import com.momo.domain.Board;
 import com.momo.domain.Item;
 import com.momo.domain.Order;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,12 +24,14 @@ public class Member {
 
     private String email;; //로그인 아이디
     private String pwd; //로그인 패스워드
-    private String introduce; //회원가입
 
-    private PrivateInformation privateInformation;
+    private String pwd;
 
     @Enumerated(EnumType.STRING)
-    private MemberType memberType; //멤버 타입 [OWNER, SITTER]
+    private MemberType membertype;
+
+    @Embedded
+    private PrivateInformation privateInformation;
 
     @OneToMany(mappedBy = "owner")
     private List<Pet> pets = new ArrayList<>();
