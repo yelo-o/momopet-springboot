@@ -1,5 +1,6 @@
 package com.momo.controller;
 
+import com.momo.domain.member.Address;
 import com.momo.domain.member.Gender;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +16,7 @@ public class MemberForm {
     private String email;
     private LocalDateTime birthDate;
     private Gender gender; //FEMALE, MALE
-    private String address;
+    private Address address;
     private String phoneNumber;
 
 }

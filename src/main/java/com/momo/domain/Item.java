@@ -13,10 +13,6 @@ import java.time.LocalDateTime;
 public class Item {
 
     @Id @GeneratedValue
-    @Column(name = "item_id")
-public class Item {
-
-    @Id @GeneratedValue
     @Column(name="item_id")
     private Long id;
 
