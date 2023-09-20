@@ -25,8 +25,6 @@ public class Member {
     private String email;; //로그인 아이디
     private String pwd; //로그인 패스워드
 
-    private String pwd;
-
     @Enumerated(EnumType.STRING)
     private MemberType membertype;
 

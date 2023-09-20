@@ -23,7 +23,7 @@ public class MemberService {
 
     //중복 아이디 검증 메소드
     private void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findById(member.getLoginId());
+        List<Member> findMembers = memberRepository.findById(member.getEmail());
         if (!findMembers.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
