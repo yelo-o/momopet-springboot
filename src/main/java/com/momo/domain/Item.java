@@ -3,6 +3,7 @@ package com.momo.domain;
 import com.momo.domain.member.Member;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,7 +25,8 @@ public class Item {
 
     private int price; // 하루 일당
 
-    private LocalDateTime availableDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     private String introduction; //시터의 자기소개
 
