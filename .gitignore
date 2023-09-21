@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# 스프링 시큐리티 보안 설정 제외
+application-oauth.yml
