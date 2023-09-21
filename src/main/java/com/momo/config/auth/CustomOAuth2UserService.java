@@ -3,7 +3,7 @@ package com.momo.config.auth;
 import com.momo.config.auth.dto.OAuthAttributes;
 import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.user.User;
-import com.momo.domain.user.UserRepository;
+import com.momo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
