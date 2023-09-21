@@ -9,6 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
@@ -27,10 +30,20 @@ public class ItemController {
         item.setNickname(form.getNickname());
         item.setIntroduction(form.getIntroduction());
         item.setPrice(form.getPrice());
-        item.setAvailableDate(form.getAvailableDate());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime startDateTime = LocalDateTime.parse(form.getStartDate(), formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse(form.getEndDate(), formatter);
+
+        item.setStartDate(startDateTime);
+        item.setEndDate(endDateTime);
 
         itemService.saveItem(item);
         return "redirect:/";
     }
+
+    /*public String list(Model model) {
+        List<Item> items = itemsService.findItems();
+    }*/
 
 }
