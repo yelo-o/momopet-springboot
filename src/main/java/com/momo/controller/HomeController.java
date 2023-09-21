@@ -2,7 +2,6 @@ package com.momo.controller;
 
 import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
-import com.momo.service.posts.PostsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
