@@ -12,6 +12,12 @@
         <div class="container">
             <div class="row justify-content-between">
                 <div class="col-lg-5">
+                    <div th:if="${userName}">
+                        <span class="text-warning" id="user" th:text="${userName}"></span> <span class="text-warning">님 반갑습니다!</span>
+                    </div>
+                    <div th:unless="${userName}">
+                        <br>
+                    </div>
                     <div class="intro-excerpt">
                         <h1>Momopet <br><span clsas="d-block">Loves your pet</span></h1>
                         <p class="mb-5">혼자 남겨진 반려동물을 생각하며, 외출을 망설인 적이 있으신가요? <br>
