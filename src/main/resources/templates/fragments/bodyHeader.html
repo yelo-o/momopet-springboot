@@ -11,6 +11,7 @@
 <!--            </button>-->
             <!--로그인 X-->
             <div th:unless="${#authorization.expr('isAuthenticated()')}" class="collapse navbar-collapse" >
+
                 <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
                     <li class="nav-item active">
                         <a class="nav-link" href="#">Home</a>

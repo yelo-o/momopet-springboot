@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-public abstract class Item {
+
+public class Item {
 
     @Id @GeneratedValue
     @Column(name="item_id")
@@ -19,8 +20,12 @@ public abstract class Item {
     @JoinColumn(name = "member_id")
     private Member sitter;
 
+    private String nickname;
+
     private int price; // 하루 일당
 
     private LocalDateTime availableDate;
+
+    private String introduction; //시터의 자기소개
 
 }

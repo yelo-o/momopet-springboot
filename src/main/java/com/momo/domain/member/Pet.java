@@ -5,12 +5,13 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter @Setter
 public class Pet {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     @Column(name = "pet_id")
     private Long id;
 
@@ -22,7 +23,7 @@ public class Pet {
     private Gender gender; //수컷, 암컷
     private String breed; //품종
 
-    private int age;
+    private LocalDateTime birthDate;
     private String remark; //주의사항
 
     @ManyToOne(fetch = FetchType.LAZY)
