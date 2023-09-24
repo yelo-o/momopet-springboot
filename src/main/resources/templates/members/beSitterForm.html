@@ -55,13 +55,14 @@
 
         <label th:for="gender">성별</label>
         <div class="form-group">
-            <select class="form-select" id="floatingSelectGrid" name="gender">
-<!--            <select class="form-control" th:field="*{gender}">-->
-                <option selected>선택</option>
-                <option th:value="남성" th:text="남성"></option>
-                <option th:value="여성" th:text="여성"></option>
+            <select class="form-select" th:field="*{gender}"
+            th:class="${#fields.hasErrors('gender')}? 'form-select fieldError' : 'form-select'">
+                <option selected value="">선택</option>
+                <option th:value="남성">남성</option>
+                <option th:value="여성">여성</option>
             </select>
-<!--            <label for="floatingSelectGrid">성별을 선택해주세요</label>-->
+            <p th:if="${#fields.hasErrors('gender')}"
+               th:errors="*{gender}">Incorrect date</p>
         </div>
 
 <!--        <select name="itemId" id="item" class="form-control"> <option value="">상품선택</option>-->
