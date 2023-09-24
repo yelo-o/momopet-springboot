@@ -5,7 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter @Setter
@@ -23,7 +23,7 @@ public class Pet {
     private Gender gender; //수컷, 암컷
     private String breed; //품종
 
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     private String remark; //주의사항
 
     @ManyToOne(fetch = FetchType.LAZY)
