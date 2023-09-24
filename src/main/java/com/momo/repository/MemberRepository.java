@@ -1,6 +1,7 @@
 package com.momo.repository;
 
 import com.momo.domain.member.Member;
+import com.momo.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.swing.text.html.parser.Entity;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -15,12 +17,18 @@ public class MemberRepository {
 
     private final EntityManager em;
 
-    public void save(Member member) {
-        em.persist(member);
+    public void save(User user) {
+        em.persist(user);
     }
 
-    public Member findOne(Long id) { //단건 조회
-        return em.find(Member.class, id);
+    public User findOne(Long id) { //단건 조회
+        return em.find(User.class, id);
+    }
+
+    public User findByEmail(String email) { //단건 조회
+        return em.createQuery("select u from User u where u.email = :email", User.class)
+                .setParameter("email", email)
+                .getSingleResult();
     }
 
     public List<Member> findAll() { //모든 멤버 조회
@@ -33,5 +41,6 @@ public class MemberRepository {
                 .setParameter("loginId", loginId)
                 .getResultList();
     }
+
 
 }
