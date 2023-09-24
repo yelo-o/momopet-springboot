@@ -48,20 +48,18 @@ public class MemberController {
 
     @PostMapping("/members/beSitter")
     public String beSitter(@Valid MemberUpdateForm form, BindingResult result,
-                           @LoginUser SessionUser user, @RequestParam("gender") String genderString) {
+                           @LoginUser SessionUser user) {
         //memberUpdateForm에 오류가 있는지 확인 (Validation)
         if (result.hasErrors()) {
             return "members/beSitterForm";
         }
-
-        log.info("변환 전의 성별은 : " + genderString);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
         Address address = new Address(form.getSi() ,form.getGu());
 
         Gender gender = null;
-        if (genderString.equals("여성")){
+        if (form.getGender().equals("여성")){
             gender = Gender.FEMALE;
         } else {
             gender = Gender.MALE;
