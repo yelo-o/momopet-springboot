@@ -1,52 +1,91 @@
 package com.momo.controller;
 
-import com.momo.domain.member.Member;
+import com.momo.config.auth.LoginUser;
+import com.momo.config.auth.dto.SessionUser;
+import com.momo.domain.member.Address;
+import com.momo.domain.member.Gender;
 import com.momo.domain.member.PrivateInformation;
+import com.momo.domain.user.Role;
+import com.momo.domain.user.User;
 import com.momo.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Address;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/members/selectMember")
-    public String selectMember() {
-        return "members/selectMember";
-
+    @GetMapping("/members/beSitter")
+    public String beSitterForm(Model model) {
+        model.addAttribute("memberUpdateForm", new MemberUpdateForm());
+        return "members/beSitterForm";
     }
 
-    @GetMapping("/members/new")
-    public String createForm(Model model) {
-        model.addAttribute("memberForm", new MemberForm());
-        return "members/createMemberForm";
-    }
+//    @GetMapping("/members/update")
+//    public String updateForm(Model model, @LoginUser SessionUser user) {
+//        log.info("로그인 이름 : " + user.getName());
+//        User findUser = memberService.findOne(user.getEmail());
+//
+//        model.addAttribute("user", findUser);
+//
+//        model.addAttribute("memberUpdateForm", new MemberUpdateForm());
+//        return "members/updateMemberForm";
+//    }
 
-    @PostMapping("/members/new")
-    public String create(@Valid MemberForm form, BindingResult result) {
-
+    @PostMapping("/members/beSitter")
+    public String beSitter(@Valid MemberUpdateForm form, BindingResult result,
+                           @LoginUser SessionUser user) {
+        //memberUpdateForm에 오류가 있는지 확인 (Validation)
         if (result.hasErrors()) {
-            return "members/createMemberForm";
+            return "members/beSitterForm";
         }
 
-        PrivateInformation privateInformation = new PrivateInformation(form.getName(), form.getEmail(), form.getBirthDate(), form.getGender(), form.getAddress(), form.getPhoneNumber());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
+        Address address = new Address(form.getSi() ,form.getGu());
 
-        Member member = new Member();
-        member.setEmail(form.getEmail());
-        member.setPrivateInformation(privateInformation);
+        Gender gender = null;
+        if (form.getGender().equals("여성")){
+            gender = Gender.FEMALE;
+        } else {
+            gender = Gender.MALE;
+        }
 
-        memberService.join(member);
-        return "redirect:/";
+        log.info("변환 이후의 성별은 : " + gender);
+
+        //개인정보 객체 생성
+        PrivateInformation privateInformation =
+                new PrivateInformation(birthDate, address, form.getPhoneNumber(), gender);
+
+        memberService.updateUser(user.getEmail(), privateInformation);
+
+        return "redirect:/members/myInfo";
     }
+    @GetMapping("/members/myInfo")
+    public String myInfoForm(Model model, @LoginUser SessionUser user) {
+        User findUser = memberService.findOne(user.getEmail());
+        log.info("유저의 권한 : " + findUser.getRole());
 
+        if (findUser.getUserType() == null) {
+            return "redirect:/members/beSitter";
+        }
+        model.addAttribute("user", findUser);
+
+        return "members/myInfoForm";
+    }
 
 }
