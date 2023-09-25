@@ -1,6 +1,5 @@
 package com.momo.repository;
 
-import com.momo.domain.member.Member;
 import com.momo.domain.member.Pet;
 import com.momo.domain.user.User;
 import lombok.RequiredArgsConstructor;
@@ -37,16 +36,16 @@ public class MemberRepository{
                 .getSingleResult();
     }
 
-    public List<Member> findAll() { //모든 멤버 조회
-        return em.createQuery("select m from Member m", Member.class) //JPQL : 엔티티 객체를 대상으로 쿼리 진행
-                .getResultList();
-    }
+//    public List<Member> findAll() { //모든 멤버 조회
+//        return em.createQuery("select m from Member m", Member.class) //JPQL : 엔티티 객체를 대상으로 쿼리 진행
+//                .getResultList();
+//    }
 
-    public List<Member> findById(String loginId) { //아이디로 리스트 조회
-        return em.createQuery("select m from Member m where m.loginId = :loginId", Member.class)
-                .setParameter("loginId", loginId)
-                .getResultList();
-    }
+//    public List<Member> findById(String loginId) { //아이디로 리스트 조회
+//        return em.createQuery("select m from Member m where m.loginId = :loginId", Member.class)
+//                .setParameter("loginId", loginId)
+//                .getResultList();
+//    }
 
     public Pet findPet(Long id) throws NoResultException { //로그인한 아이디와 같은 펫 조회
         return em.createQuery("select p from Pet p where p.owner.id = :id", Pet.class)

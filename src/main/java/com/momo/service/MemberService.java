@@ -1,7 +1,6 @@
 package com.momo.service;
 
 import com.momo.domain.member.Address;
-import com.momo.domain.member.Member;
 import com.momo.domain.member.Pet;
 import com.momo.domain.member.PrivateInformation;
 import com.momo.domain.user.User;
@@ -33,17 +32,17 @@ public class MemberService {
 //    }
 
     //중복 아이디 검증 메소드
-    private void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findById(member.getEmail());
-        if (!findMembers.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
-        }
-    }
+//    private void validateDuplicateMember(User user) {
+//        List<Member> findMembers = memberRepository.findById(user.getEmail());
+//        if (!findMembers.isEmpty()) {
+//            throw new IllegalStateException("이미 존재하는 회원입니다.");
+//        }
+//    }
 
     //회원 전체 조회
-    public List<Member> findMembers() {
-        return memberRepository.findAll();
-    }
+//    public List<Member> findMembers() {
+//        return memberRepository.findAll();
+//    }
 
     public User findOne(Long memberId) {
         return memberRepository.findOne(memberId);
