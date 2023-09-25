@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-@Data
-public class Board {
+public class Board extends BaseTimeEntity{
 
     @Id @GeneratedValue
     @Column(name = "board_id")
@@ -26,8 +25,7 @@ public class Board {
     @JoinColumn(name = "member_id")
     private Member owner;
 
-
-    private LocalDateTime postingDate;
+    //private LocalDateTime postingDate;
 
     private int view; //조회수
 

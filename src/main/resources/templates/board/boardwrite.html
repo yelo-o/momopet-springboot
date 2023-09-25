@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
 <head>
     <meta charset="UTF-8">
     <title>게시물 작성폼</title>
@@ -25,12 +26,14 @@
 </style>
 
 <body>
-<div class="layout">
-    <form action="/board/writepro" method="post">
-        <input name="title" type="text">
-        <textarea name="content"></textarea>
+
+<div class="layout" th:object="${form}">
+    <form action="/board/write" method="post">
+        <input type="text" th:field="*{title}">
+        <textarea th:field="*{content}"></textarea>
         <button type="submit">작성</button>
     </form>
 </div>
+  
 </body>
 </html>

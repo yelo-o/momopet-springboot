@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,17 +20,16 @@ public class BoardController {
     private BoardService boardService;
 
     @GetMapping("/board/write")     //localhost:9090/board/write
-    public String boardWriteForm(){
+    public String boardWriteForm(Model model, BoardForm form){
+        model.addAttribute("form", form);
         return "board/boardwrite";
     }
 
-    @PostMapping("/board/writepro")
-    public  String boardWritePro(Board board,
-                                 @RequestParam("title") String title) {
+    @PostMapping("/board/write")
+    public  String boardWritePro(BoardForm form) {
 
-        log.info("제목 가져오기" + title);
-
-        //boardService.write(board);
+        log.info("제목 가져오기" + form.getTitle());
+//        boardService.write(board);
         return "board/boardlist";
     }
 
