@@ -9,7 +9,7 @@ public class ItemForm {
     private String nickname;
     private Gender gender;
     private String introduction;
-    private int price;
+    private Integer price;
     private String startDate;
     private String endDate;
 }
