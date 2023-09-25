@@ -1,6 +1,6 @@
 package com.momo.domain;
 
-import com.momo.domain.member.Member;
+import com.momo.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,7 +21,7 @@ public class Item {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member sitter;
+    private User sitter;
 
     @Column(nullable = false)
     private int price; // 하루 일당
