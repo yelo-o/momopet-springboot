@@ -81,6 +81,11 @@ public class User extends BaseTimeEntity  {
         return this;
     }
 
+    public User upgrade() {
+        this.userType = UserType.OWNER;
+        return this;
+    }
+
     public String getRoleKey() {
         return this.role.getKey();
     }
