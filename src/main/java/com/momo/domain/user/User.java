@@ -45,28 +45,19 @@ public class User extends BaseTimeEntity  {
     @Embedded
     private PrivateInformation privateInformation;
 
-//    @Builder
-//    public User(String name, String email, String picture, Role role, PrivateInformation privateInformation) {
-//        this.name = name;
-//        this.email = email;
-//        this.picture = picture;
-//        this.role = role;
-//        this.privateInformation = privateInformation;
-//    }
-@Builder
-public User(String name, String email, String picture, Role role, PrivateInformation privateInformation) {
-    this.name = name;
-    this.email = email;
-    this.picture = picture;
-    this.role = role;
-    this.privateInformation = privateInformation;
-}
+    @Builder
+    public User(String name, String email, String picture, Role role, PrivateInformation privateInformation) {
+        this.name = name;
+        this.email = email;
+        this.picture = picture;
+        this.role = role;
+        this.privateInformation = privateInformation;
+    }
 
-    @OneToMany(mappedBy = "owner")
-    private List<Pet> pets = new ArrayList<>();
+    @OneToOne(mappedBy = "owner")
+    private Pet pet;
 
     //=멤버 변수=//
-
     @Builder
     public User(String name, String email, String picture, Role role) {
         this.name = name;
