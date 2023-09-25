@@ -56,7 +56,6 @@ public class MemberService {
     public void updateUser(String email, PrivateInformation privateInformation) {
         User findUser = memberRepository.findByEmail(email);
         findUser.update(privateInformation);
-        memberRepository.save(findUser);
     }
 
     //펫 정보 불러오기
@@ -70,8 +69,9 @@ public class MemberService {
     }
 
     //펫 추가
-    public void add(Pet pet) {
+    public void add(Pet pet, User findUser) {
         memberRepository.save(pet);
+        findUser.upgrade(); //SITTER => OWNER 업그레이드
     }
 
 }
