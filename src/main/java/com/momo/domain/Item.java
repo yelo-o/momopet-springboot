@@ -21,6 +21,7 @@ public class Item {
     private Member sitter;
 
     private String nickname;
+<<<<<<< Updated upstream
 
     private int price; // 하루 일당
 
@@ -28,4 +29,14 @@ public class Item {
 
     private String introduction; //시터의 자기소개
 
+=======
+
+    private int price; // 하루 일당
+
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+
+    private String introduction; //시터의 자기소개
+
+>>>>>>> Stashed changes
 }

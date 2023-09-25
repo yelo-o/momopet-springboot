@@ -12,5 +12,10 @@ public class ItemForm {
     private Gender gender;
     private String introduction;
     private int price;
+<<<<<<< Updated upstream
     private LocalDateTime availableDate;
+=======
+    private String startDate;
+    private String endDate;
+>>>>>>> Stashed changes
 }
