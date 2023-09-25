@@ -2,14 +2,17 @@ package com.momo.service;
 
 import com.momo.domain.member.Address;
 import com.momo.domain.member.Member;
+import com.momo.domain.member.Pet;
 import com.momo.domain.member.PrivateInformation;
 import com.momo.domain.user.User;
 import com.momo.repository.MemberRepository;
 import com.momo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -54,6 +58,21 @@ public class MemberService {
         User findUser = memberRepository.findByEmail(email);
         findUser.update(privateInformation);
         memberRepository.save(findUser);
+    }
+
+    //펫 정보 불러오기
+    public Pet findPet(Long id) {
+        try {
+            Pet pet = memberRepository.findPet(id);
+            return pet;
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    //펫 추가
+    public void add(Pet pet) {
+        memberRepository.save(pet);
     }
 
 }
