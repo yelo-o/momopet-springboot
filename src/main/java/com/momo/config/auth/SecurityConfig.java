@@ -19,7 +19,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
             .csrf().disable().headers().frameOptions().disable() //h2-console 화면을 위해 해당 옵션들 disable 처리
             .and()
                 .authorizeHttpRequests() //URL별 권한 관리를 설정하는 옵션의 시작점
-                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile").permitAll() //이쪽 url들은 아무런 권한없이 들어갈 수 있다.
+                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/profile", "/board/**").permitAll() //이쪽 url들은 아무런 권한없이 들어갈 수 있다.
                 .antMatchers("/api/v1/**").hasRole(Role.USER.name()) //지정된 옵션에는 전체 열람 권한 부여 => 권한이 ROLE_USER인 경우
                 .antMatchers("/members/**").hasRole(Role.GUEST.name()) //지정된 옵션에는 전체 열람 권한 부여 => 권한이 ROLE_GUEST인 경우
                 .anyRequest().authenticated() //anyRequest() : 설정된 값들 이외 나머지 URL
