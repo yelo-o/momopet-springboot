@@ -12,7 +12,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+<<<<<<< Updated upstream
 public class Board {
+=======
+@Data
+public class Board extends BaseTimeEntity{
+>>>>>>> Stashed changes
 
     @Id @GeneratedValue
     @Column(name = "board_id")
@@ -22,9 +27,14 @@ public class Board {
     @JoinColumn(name = "member_id")
     private Member owner;
 
+<<<<<<< Updated upstream
     private String title;
     private String content;
     private LocalDateTime postingDate;
+=======
+
+    //private LocalDateTime postingDate;
+>>>>>>> Stashed changes
 
     private int view; //조회수
 
