@@ -1,6 +1,7 @@
 package com.momo.domain;
 
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,18 +13,20 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@Data
 public class Board {
 
     @Id @GeneratedValue
     @Column(name = "board_id")
-    private Long id;
+    private Integer id;
+    private String title;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member owner;
 
-    private String title;
-    private String content;
+
     private LocalDateTime postingDate;
 
     private int view; //조회수
