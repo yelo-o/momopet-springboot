@@ -28,8 +28,12 @@ public class BoardController {
     @PostMapping("/board/write")
     public  String boardWritePro(BoardForm form) {
 
+        Board board = new Board();
+        board.setTitle(form.getTitle());
+        board.setContent(form.getContent());
+
         log.info("제목 가져오기" + form.getTitle());
-//        boardService.write(board);
+        boardService.write(board);
         return "board/boardlist";
     }
 
