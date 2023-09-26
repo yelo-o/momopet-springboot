@@ -2,9 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <head th:replace="fragments/header :: header"/>
     <meta charset="UTF-8">
     <title>게시물 작성폼</title>
 </head>
+<div th:replace="fragments/bodyHeader :: bodyHeader" />
 
 <style>
     .layout {
@@ -30,9 +32,10 @@
     <form th:action="@{/board/update/{id}(id = ${board.id})}" method="post">
         <input name="title" type="text" th:value="${board.title}">
         <textarea name="content" th:text="${board.content}"></textarea>
-        <button type="submit">수정</button>
+        <button type="submit" class="btn btn-primary" id="btn-save">수정</button>
     </form>
 </div>
 
 </body>
+<div th:replace="fragments/footer :: footer" />
 </html>
