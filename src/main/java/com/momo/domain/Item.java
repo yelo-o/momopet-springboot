@@ -1,6 +1,7 @@
 package com.momo.domain;
 
 import com.momo.domain.member.Member;
+import com.momo.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,9 +20,13 @@ public class Item {
     @Column(name = "item_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+/*    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member sitter;
+    private Member sitter;*/
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User sitter;
 
     @Column(nullable = false)
     private int price; // 하루 일당
@@ -33,10 +38,5 @@ public class Item {
 
     private String dog;
     private String cat;
-
-    private String nickname;
-
-
-
 
 }
