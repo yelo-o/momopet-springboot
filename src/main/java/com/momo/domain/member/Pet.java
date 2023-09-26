@@ -51,4 +51,17 @@ public class Pet extends BaseTimeEntity {
         this.remark = remark;
         this.owner = owner;
     }
+
+    //펫 정보 업데이트 메소드
+    public Pet update(String name, Gender gender, PetType petType,
+                      String breed, LocalDate birthDate, String remark) {
+        this.name = name;
+        this.gender = gender;
+        this.petType = petType;
+        this.breed = breed;
+        this.birthDate = birthDate;
+        this.remark = remark;
+
+        return this;
+    }
 }

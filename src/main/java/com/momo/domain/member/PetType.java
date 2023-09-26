@@ -1,5 +1,5 @@
 package com.momo.domain.member;
 
 public enum PetType {
-    CAT, DOG
+    개, 고양이
 }

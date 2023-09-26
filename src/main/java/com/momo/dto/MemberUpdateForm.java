@@ -1,12 +1,9 @@
-package com.momo.controller;
+package com.momo.dto;
 
-import com.momo.domain.member.Address;
-import com.momo.domain.member.Gender;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
 
 @Getter @Setter
 public class MemberUpdateForm {

@@ -1,12 +1,10 @@
 package com.momo.domain;
 
 
+import com.momo.domain.user.User;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-import com.momo.domain.member.Member;
-
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,7 +21,7 @@ public class Board extends BaseTimeEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member owner;
+    private User sitter;
 
     //private LocalDateTime postingDate;
 
