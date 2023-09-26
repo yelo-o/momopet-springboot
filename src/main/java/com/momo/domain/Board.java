@@ -22,9 +22,13 @@ public class Board extends BaseTimeEntity{
     private String title;
     private String content;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User sitter;
+
+    @Column
+    private String name;
 
     //private LocalDateTime postingDate;
 
