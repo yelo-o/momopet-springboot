@@ -22,19 +22,14 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="/members/myInfo" class="nav-link active bg-warning" aria-current="page">
+            <a href="/members/myInfo" class="nav-link link-dark">
                 <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
                 개인 정보
             </a>
         </li>
-<!--        <li>-->
-<!--            <a href="#" class="nav-link link-dark">-->
-<!--                <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>-->
-<!--                추가 정보 등록하기-->
-<!--            </a>-->
-<!--        </li>-->
+
         <li>
-            <a href="/members/myPet" class="nav-link link-dark">
+            <a href="/members/myPet" class="nav-link active bg-warning" aria-current="page">
                 <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
                 펫 정보
             </a>
@@ -58,13 +53,6 @@
             <img th:src="${user.picture}" alt="" width="32" height="32" class="rounded-circle me-2">
             <strong th:text="${user.name}"></strong>
         </a>
-<!--        <ul class="dropdown-menu text-small shadow">-->
-<!--            <li><a class="dropdown-item" href="#">New project...</a></li>-->
-<!--            <li><a class="dropdown-item" href="#">Settings</a></li>-->
-<!--            <li><a class="dropdown-item" href="#">Profile</a></li>-->
-<!--            <li><hr class="dropdown-divider"></li>-->
-<!--            <li><a class="dropdown-item" href="#">Sign out</a></li>-->
-<!--        </ul>-->
     </div>
 </div>
 
@@ -76,52 +64,52 @@
     <h2>개인 정보</h2>
     <div class="table-responsive">
 
-        <form role="form" action="/members/myInfo" th:object="${user}" method="get">
+        <form role="form" action="/members/updateMyPet" th:object="${form}" method="post">
+
             <div class="form-group">
                 <label th:for="name">이름</label>
-                <input type="text" th:field="*{name}" class="form-control" readonly>
+                <input type="text" id="name" name="name" th:value="${pet.name}" class="form-control">
             </div>
 
-            <div class="form-group" th:switch="*{privateInformation.gender}">
-                <label th:for="privateInformation.gender">성별</label>
-                <input type="text" th:field="*{privateInformation.gender}" class="form-control" readonly>
+            <label th:for="gender">성별</label>
+            <div class="form-group">
+                <select class="form-select" id="gender" name="gender" th:value="${pet.gender}">
+                    <option selected value="">선택</option>
+                    <option th:value="남성">수컷</option>
+                    <option th:value="여성">암컷</option>
+                </select>
+            </div>
+
+            <label th:for="petType">종류</label>
+            <div class="form-group">
+                <select class="form-select" id="petType" name="petType" th:value="${pet.petType}">
+                    <option selected value="">선택</option>
+                    <option th:value="고양이">고양이</option>
+                    <option th:value="개">개</option>
+                </select>
             </div>
 
             <div class="form-group">
-                <label th:for="email">이메일</label>
-                <input type="text" th:field="*{email}" class="form-control" readonly>
+                <label th:for="breed">품종</label>
+                <input type="text" id="breed" name="breed" th:value="${pet.breed}" class="form-control">
             </div>
 
             <div class="form-group">
-                <label th:for="privateInformation.birthDate">생년월일</label>
-                <input type="text" th:field="*{privateInformation.birthDate}" class="form-control" readonly>
+                <label th:for="birthDate">생년월일</label>
+                <input type="date" id="birthDate" name="birthDate" th:value="${pet.birthDate}" class="form-control">
             </div>
 
             <div class="form-group">
-                <label th:for="privateInformation.phoneNumber">전화번호</label>
-                <input type="text" th:field="*{privateInformation.phoneNumber}" class="form-control" readonly>
+                <label th:for="remark">주의사항</label>
+                <input type="text" id="remark" name="remark" th:field="${pet.remark}" class="form-control">
             </div>
-
-            <hr>
-            <h6>주소</h6>
-            <div class="form-group">
-                <label th:for="privateInformation.address.si">시</label>
-                <input type="text" th:field="*{privateInformation.address.si}" class="form-control" readonly>
-            </div>
-
-            <div class="form-group">
-                <label th:for="gu">구</label>
-                <input type="text" th:field="*{privateInformation.address.gu}" class="form-control" readonly>
-            </div>
-
-
 
             <hr>
 <!-- 초록색 버튼 -->
 <!--            <button type="submit" class="btn btn-primary">수정</button>-->
 <!-- 검은색 버튼 -->
             <div class="btn-group me-2">
-                <button type="submit" class="btn btn-sm btn-outline-secondary">수정 페이지로 이동</button>
+                <button type="submit" class="btn btn-sm btn-outline-secondary">수정 완료</button>
             </div>
         </form>
 
@@ -129,7 +117,7 @@
 </main>
 
 
-<!--</main>-->
+</main>
 
 </div>
 </div>

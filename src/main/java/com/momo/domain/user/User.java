@@ -66,8 +66,6 @@ public class User extends BaseTimeEntity  {
     @OneToOne(mappedBy = "owner")
     private Pet pet;
 
-
-    //=멤버 변수=//
     @Builder
     public User(String name, String email, String picture, Role role) {
         this.name = name;
@@ -87,6 +85,14 @@ public class User extends BaseTimeEntity  {
     public User update(PrivateInformation privateInformation) {
         this.privateInformation = privateInformation;
         this.userType = UserType.SITTER;
+
+        return this;
+    }
+
+
+    //유저 개인정보 업데이트 메소드
+    public User updateInfo(PrivateInformation privateInformation) {
+        this.privateInformation = privateInformation;
 
         return this;
     }
