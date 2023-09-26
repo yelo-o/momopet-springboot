@@ -1,8 +1,8 @@
 package com.momo.domain;
 
+import com.momo.domain.user.User;
 import net.bytebuddy.asm.Advice;
 
-import com.momo.domain.member.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,8 +22,8 @@ public class Order {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
