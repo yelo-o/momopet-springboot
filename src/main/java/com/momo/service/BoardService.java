@@ -1,5 +1,6 @@
 package com.momo.service;
 
+import com.momo.controller.BoardForm;
 import com.momo.domain.Board;
 import com.momo.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;

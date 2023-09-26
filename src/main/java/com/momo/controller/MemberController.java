@@ -144,10 +144,7 @@ public class MemberController {
                 .birthDate(birthDate)
                 .remark(form.getRemark())
                 .owner(findUser)
-                .build());
-
-        //SITTER => OWNER 업데이트
-
+                .build(), findUser);
 
         return "redirect:/members/myPet";
     }
