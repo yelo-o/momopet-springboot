@@ -31,10 +31,10 @@ public class Pet extends BaseTimeEntity {
     private LocalDate birthDate;
     private String remark; //주의사항
 
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User owner;
-
 
     public Pet() {
     }
