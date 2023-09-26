@@ -1,6 +1,5 @@
 package com.momo.config.auth.dto;
 
-import com.momo.domain.member.Member;
 import com.momo.domain.user.Role;
 import com.momo.domain.user.User;
 import lombok.Builder;

@@ -1,10 +1,11 @@
 package com.momo.domain;
 
 
+import com.momo.domain.user.User;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import com.momo.domain.member.Member;
 
 
 import javax.persistence.*;
@@ -12,19 +13,20 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-public class Board {
+public class Board extends BaseTimeEntity{
 
     @Id @GeneratedValue
     @Column(name = "board_id")
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member owner;
+    private Integer id;
 
     private String title;
     private String content;
-    private LocalDateTime postingDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User sitter;
+
+    //private LocalDateTime postingDate;
 
     private int view; //조회수
 
