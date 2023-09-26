@@ -31,8 +31,8 @@ public class Member {
     @Embedded
     private PrivateInformation privateInformation;
 
-    @OneToMany(mappedBy = "owner")
-    private List<Pet> pets = new ArrayList<>();
+//    @OneToMany(mappedBy = "owner")
+//    private List<Pet> pets = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
@@ -40,7 +40,7 @@ public class Member {
     @OneToMany(mappedBy = "sitter")
     private List<Item> items = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner")
-    private List<Board> boards = new ArrayList<>();
+//    @OneToMany(mappedBy = "owner")
+//    private List<Board> boards = new ArrayList<>();
 
 }

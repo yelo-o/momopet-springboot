@@ -1,6 +1,7 @@
 package com.momo.domain.user;
 
 import com.momo.domain.BaseTimeEntity;
+import com.momo.domain.Board;
 import com.momo.domain.member.MemberType;
 import com.momo.domain.member.Pet;
 import com.momo.domain.member.PrivateInformation;
@@ -41,6 +42,10 @@ public class User extends BaseTimeEntity  {
     @Column(nullable = false)
     private Role role; //ROLE_GUEST, ROLE_USER
 
+    @OneToMany(mappedBy = "sitter")
+    private List<Board> boards = new ArrayList<>();
+
+
     //=멤버 변수=//
     @Embedded
     private PrivateInformation privateInformation;
@@ -62,8 +67,8 @@ public User(String name, String email, String picture, Role role, PrivateInforma
     this.privateInformation = privateInformation;
 }
 
-    @OneToMany(mappedBy = "owner")
-    private List<Pet> pets = new ArrayList<>();
+//    @OneToMany(mappedBy = "owner")
+//    private List<Pet> pets = new ArrayList<>();
 
     //=멤버 변수=//
 

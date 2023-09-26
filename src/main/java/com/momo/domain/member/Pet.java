@@ -26,8 +26,8 @@ public class Pet {
     private LocalDate birthDate;
     private String remark; //주의사항
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member owner;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id")
+//    private Member owner;
 
 }
