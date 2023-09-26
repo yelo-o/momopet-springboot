@@ -4,12 +4,14 @@ import com.momo.domain.member.Gender;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter
 public class ItemForm {
-    private String introduction;
     private Integer price;
+    private String introduction;
     private String startDate;
     private String endDate;
-    private String dog;
-    private String cat;
+    private Boolean dog;
+    private Boolean cat;
 }
