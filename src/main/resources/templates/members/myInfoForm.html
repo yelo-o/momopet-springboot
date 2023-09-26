@@ -68,6 +68,8 @@
     </div>
 </div>
 
+
+
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">마이 페이지</h1>
@@ -76,7 +78,7 @@
     <h2>개인 정보</h2>
     <div class="table-responsive">
 
-        <form role="form" action="/members/myInfo" th:object="${user}" method="get">
+        <form role="form" action="/members/updateMyInfo" th:object="${user}" method="get">
             <div class="form-group">
                 <label th:for="name">이름</label>
                 <input type="text" th:field="*{name}" class="form-control" readonly>
@@ -127,9 +129,9 @@
 
     </div>
 </main>
+</main>
 
 
-<!--</main>-->
 
 </div>
 </div>
