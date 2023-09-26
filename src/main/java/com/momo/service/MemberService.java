@@ -1,15 +1,17 @@
 package com.momo.service;
 
 import com.momo.domain.member.Address;
-import com.momo.domain.member.Member;
+import com.momo.domain.member.Pet;
 import com.momo.domain.member.PrivateInformation;
 import com.momo.domain.user.User;
 import com.momo.repository.MemberRepository;
 import com.momo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -29,17 +32,17 @@ public class MemberService {
 //    }
 
     //중복 아이디 검증 메소드
-    private void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findById(member.getEmail());
-        if (!findMembers.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
-        }
-    }
+//    private void validateDuplicateMember(User user) {
+//        List<Member> findMembers = memberRepository.findById(user.getEmail());
+//        if (!findMembers.isEmpty()) {
+//            throw new IllegalStateException("이미 존재하는 회원입니다.");
+//        }
+//    }
 
     //회원 전체 조회
-    public List<Member> findMembers() {
-        return memberRepository.findAll();
-    }
+//    public List<Member> findMembers() {
+//        return memberRepository.findAll();
+//    }
 
     public User findOne(Long memberId) {
         return memberRepository.findOne(memberId);
@@ -53,7 +56,22 @@ public class MemberService {
     public void updateUser(String email, PrivateInformation privateInformation) {
         User findUser = memberRepository.findByEmail(email);
         findUser.update(privateInformation);
-        memberRepository.save(findUser);
+    }
+
+    //펫 정보 불러오기
+    public Pet findPet(Long id) {
+        try {
+            Pet pet = memberRepository.findPet(id);
+            return pet;
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    //펫 추가
+    public void add(Pet pet, User findUser) {
+        memberRepository.save(pet);
+        findUser.upgrade(); //SITTER => OWNER 업그레이드
     }
 
 }
