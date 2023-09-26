@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:replace="fragments/header :: header">
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
 </head>
@@ -13,12 +13,35 @@
         </div>
         <div class="form-group">
             <label th:for="introduction">자기소개</label>
-            <input type="text" th:field="*{introduction}" class="form-control"/>
+            <textarea type="text" th:field="*{introduction}" class="form-control"></textarea>
         </div>
         <div class="form-group">
             <label th:for="startDate">가능시작날짜</label>
             <input type="text" th:field="*{startDate}" class="form-control"/>
+            <label th:for="endDate">가능마지막날짜</label>
+            <input type="text" th:field="*{endDate}" class="form-control"/>
         </div>
+<!--        <div class="form-group">
+            <label th:for="daterange">가능날짜</label>
+            <input class="form-control" type="text" name="daterange"/>
+            <input type="hidden" th:field="*{startDate}"/>
+            <input type="hidden" th:field="*{endDate}"/>
+        </div>-->
+        <div class="form-group">
+            <label th:for="pettype">돌봄 가능 펫</label>
+            <br/>
+            <div class="form-check">
+                <input type="checkbox" id="dog" th:field="*{dog}" name="dog" value="true" />
+                <input type="hidden" name="_dog" value="on" />
+                <label for="dog" class="form-check-label">개</label>
+                <input type="checkbox" id="cat" th:field="*{cat}" name="cat" value="true" />
+                <input type="hidden" name="_cat" value="on" />
+                <label for="cat" class="form-check-label">고양이</label>
+            </div>
+
+        </div>
+
+
         <br/>
         <div class="text-center">
             <button class="btn btn-primary" type="submit">수정하기</button>
@@ -26,5 +49,55 @@
     </form>
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
+
+<script>
+    $(function () {
+        $('input[name="daterange"]').daterangepicker(
+            {
+                opens: 'right',
+                timePicker: true,
+                locale: {
+                    format: "YYYY-MM-DD hh:mm",
+                    separator: " - ",
+                    applyLabel: "확인",
+                    cancelLabel: "취소",
+                    fromLabel: "From",
+                    toLabel: "To",
+                    customRangeLabel: "Custom",
+                    weekLabel: "W",
+                    daysOfWeek: ["일", "월", "화", "수", "목", "금", "토"],
+                    monthNames: [
+                        "1월",
+                        "2월",
+                        "3월",
+                        "4월",
+                        "5월",
+                        "6월",
+                        "7월",
+                        "8월",
+                        "9월",
+                        "10월",
+                        "11월",
+                        "12월"
+                    ],
+                },
+                /*startDate: $('input[name="startDate"]').val(),
+                endDate: $('input[name="endDate"]').val(),*/
+
+                drops: "auto",
+            },
+            function (start, end) {
+                $('input[name="startDate"]').val(start.format("YYYY-MM-DD hh:mm"));
+                $('input[name="endDate"]').val(end.format("YYYY-MM-DD hh:mm"));
+                console.log(
+                    "A new date selection was made: " +
+                    start.format("YYYY-MM-DD") +
+                    " to " +
+                    end.format("YYYY-MM-DD")
+                );
+            }
+        );
+    });
+</script>
 </body>
 </html>
