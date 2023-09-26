@@ -1,16 +1,16 @@
 package com.momo.controller;
 
+import com.momo.config.auth.LoginUser;
+import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.Board;
+import com.momo.domain.user.User;
 import com.momo.service.BoardService;
+import com.momo.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Slf4j
@@ -18,6 +18,8 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
+    @Autowired
+    private MemberService memberService;
 
     @GetMapping("/board/write")     //localhost:9090/board/write
     public String boardWriteForm(Model model, BoardForm form){
@@ -26,11 +28,26 @@ public class BoardController {
     }
 
     @PostMapping("/board/write")
-    public  String boardWritePro(BoardForm form) {
+    public  String boardWritePro(BoardForm form, Model model, @LoginUser SessionUser user) {
 
-        log.info("제목 가져오기" + form.getTitle());
-//        boardService.write(board);
-        return "board/boardlist";
+        Board board = new Board();
+        board.setTitle(form.getTitle());
+        board.setContent(form.getContent());
+
+        log.info("로그인 이메일" + user.getEmail());
+
+        User findUser = memberService.findOne(user.getEmail());
+        board.setSitter(findUser);
+        board.setName(findUser.getName());
+
+        //log.info("제목 가져오기" + form.getTitle());
+
+        boardService.write(board);
+
+        model.addAttribute("message", "글작성이 완료되었습니다.");
+        model.addAttribute("searchUrl", "/board/list");
+
+        return "board/message";
     }
 
     @GetMapping("/board/list")
@@ -52,6 +69,30 @@ public class BoardController {
         boardService.boardDelete(id);
 
         return "redirect:/board/list";
+    }
+
+    @GetMapping("/board/modify/{id}")
+    public String boardModify(@PathVariable("id") Integer id, Model model){
+
+        model.addAttribute("board", boardService.boardView(id));
+
+        return "board/boardmodify";
+    }
+
+    @PostMapping("/board/update/{id}")
+    public String boardUpdate(@PathVariable("id") Integer id, Board board, Model model) {
+
+        Board boardTemp = boardService.boardView(id);
+        boardTemp.setTitle(board.getTitle());
+        boardTemp.setContent(board.getContent());
+
+        boardService.write(boardTemp);
+
+        model.addAttribute("message", "작성글이 수정되었습니다.");
+        model.addAttribute("searchUrl", "/board/list");
+
+
+        return "board/message";
     }
 
 }

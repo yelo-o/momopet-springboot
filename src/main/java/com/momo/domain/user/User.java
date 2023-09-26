@@ -3,7 +3,6 @@ package com.momo.domain.user;
 import com.momo.domain.BaseTimeEntity;
 import com.momo.domain.Board;
 import com.momo.domain.Item;
-import com.momo.domain.member.MemberType;
 import com.momo.domain.member.Pet;
 import com.momo.domain.member.PrivateInformation;
 import lombok.Builder;
@@ -89,6 +88,7 @@ public class User extends BaseTimeEntity  {
 
         return this;
     }
+
 
     //유저 개인정보 업데이트 메소드
     public User updateInfo(PrivateInformation privateInformation) {

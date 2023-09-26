@@ -20,7 +20,8 @@ public class Item {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
+
     private User sitter;
 
     @Column(nullable = false)
@@ -33,10 +34,5 @@ public class Item {
 
     private String dog;
     private String cat;
-
-    private String nickname;
-
-
-
 
 }

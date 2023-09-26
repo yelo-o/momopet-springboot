@@ -5,7 +5,6 @@ import com.momo.domain.user.User;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -16,12 +15,17 @@ public class Board extends BaseTimeEntity{
     @Id @GeneratedValue
     @Column(name = "board_id")
     private Integer id;
+
     private String title;
     private String content;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "user_id")
     private User sitter;
+
+    @Column
+    private String name;
 
     //private LocalDateTime postingDate;
 
