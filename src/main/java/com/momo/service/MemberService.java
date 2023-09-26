@@ -1,8 +1,6 @@
 package com.momo.service;
 
-import com.momo.domain.member.Address;
-import com.momo.domain.member.Pet;
-import com.momo.domain.member.PrivateInformation;
+import com.momo.domain.member.*;
 import com.momo.domain.user.User;
 import com.momo.repository.MemberRepository;
 import com.momo.repository.UserRepository;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -56,6 +55,19 @@ public class MemberService {
     public void updateUser(String email, PrivateInformation privateInformation) {
         User findUser = memberRepository.findByEmail(email);
         findUser.update(privateInformation);
+    }
+
+    public void updateUserInfo(String email, PrivateInformation privateInformation) {
+        User findUser = memberRepository.findByEmail(email);
+        findUser.updateInfo(privateInformation);
+//        memberRepository.save(findUser);
+    }
+
+    public void updatePet(String name, Gender gender, PetType petType, String breed,
+                          LocalDate birthDate, String remark, Pet pet) {
+        pet.update(name, gender, petType, breed, birthDate, remark);
+
+
     }
 
     //펫 정보 불러오기

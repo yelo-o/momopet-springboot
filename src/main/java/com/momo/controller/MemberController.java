@@ -2,12 +2,10 @@ package com.momo.controller;
 
 import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
-import com.momo.domain.member.Address;
-import com.momo.domain.member.Gender;
-import com.momo.domain.member.Pet;
-import com.momo.domain.member.PrivateInformation;
-import com.momo.domain.user.Role;
+import com.momo.domain.member.*;
 import com.momo.domain.user.User;
+import com.momo.dto.MemberUpdateForm;
+import com.momo.dto.PetForm;
 import com.momo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,14 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -46,23 +41,23 @@ public class MemberController {
     @PostMapping("/members/beSitter")
     public String beSitter(@Valid MemberUpdateForm form, BindingResult result,
                            @LoginUser SessionUser user) {
+
         //memberUpdateForm에 오류가 있는지 확인 (Validation)
         if (result.hasErrors()) {
             return "members/beSitterForm";
         }
 
+        //넘겨줄 정보 정제하기
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
         Address address = new Address(form.getSi() ,form.getGu());
 
         Gender gender = null;
         if (form.getGender().equals("여성")){
-            gender = Gender.FEMALE;
+            gender = Gender.여성;
         } else {
-            gender = Gender.MALE;
+            gender = Gender.남성;
         }
-
-        log.info("변환 이후의 성별은 : " + gender);
 
         //개인정보 객체 생성
         PrivateInformation privateInformation =
@@ -78,6 +73,7 @@ public class MemberController {
      */
     @GetMapping("/members/myInfo")
     public String myInfoForm(Model model, @LoginUser SessionUser user) {
+
         User findUser = memberService.findOne(user.getEmail());
         log.info("유저의 권한 : " + findUser.getRole());
 
@@ -90,44 +86,50 @@ public class MemberController {
     }
 
     @GetMapping("/members/myPet")
-    public String enrollPetFrom(Model model, @LoginUser SessionUser user,
-                                PetEnrollForm form) {
+    public String enrollPetForm(Model model, @LoginUser SessionUser user,
+                                PetForm form) {
 
         //로그인한 유저 정보 받아오고, 받아온 유저 정보로 펫 테이블 조회에서 있는지 없는지 파악
         User findUser = memberService.findOne(user.getEmail());
+        model.addAttribute("user", findUser);
 
-        Long findUserId = findUser.getId(); //펫 테이블에 같이 넣을 PK값 불러오기
-        Pet findPet = memberService.findPet(findUserId);
+        Pet findPet = memberService.findPet(findUser.getId());
 
         //펫 정보 X => 펫 정보 등록 페이지로 이동
         if (findPet == null) {
-            model.addAttribute("user", findUser);
             model.addAttribute("form", form);
             return "members/myPetEnrollForm";
         }
 
         //펫 정보 O => 펫 정보 불러오기
-        model.addAttribute("user", findUser);
         model.addAttribute("pet", findPet);
         return "members/myPetForm";
     }
 
     @PostMapping("/members/myPet")
-    public String enrollPet(@Valid PetEnrollForm form, BindingResult result,
+    public String enrollPet(@Valid PetForm form, BindingResult result,
                             @LoginUser SessionUser user) {
 
         //PetEnrollForm에 오류가 있는지 확인 (Validation)
         if (result.hasErrors()) {
-            return "members/myPetEnrollForm";
+            return "redirect:/members/myPet"; //현재 validation 안됨 (리다이렉트만 됨)
         }
 
-        //정보 정제하기
+        //넘겨줄 정보 정제하기
         Gender gender = null;
         if (form.getGender().equals("여성")){
-            gender = Gender.FEMALE;
+            gender = Gender.여성;
         } else {
-            gender = Gender.MALE;
+            gender = Gender.남성;
         }
+
+        PetType petType = null;
+        if (form.getPetType().equals("고양이")){
+            petType = PetType.고양이;
+        } else {
+            petType = PetType.개;
+        }
+
         User findUser = memberService.findOne(user.getEmail());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -136,6 +138,7 @@ public class MemberController {
         //Pet 엔티티에 저장하기
         memberService.add( Pet.builder()
                 .name(form.getName())
+                .petType(petType)
                 .gender(gender)
                 .breed(form.getBreed())
                 .birthDate(birthDate)
@@ -144,6 +147,88 @@ public class MemberController {
                 .build(), findUser);
 
         return "redirect:/members/myPet";
+    }
+
+    @GetMapping("members/updateMyPet")
+    public String updatePetForm(Model model, @LoginUser SessionUser user,
+                                @Valid PetForm form) {
+        User findUser = memberService.findOne(user.getEmail());
+        Pet findPet = memberService.findPet(findUser.getId());
+
+        model.addAttribute("user", findUser);
+        model.addAttribute("pet", findPet);
+        model.addAttribute("form", form);
+
+        return "members/myPetUpdateForm";
+    }
+
+    @PostMapping("members/updateMyPet")
+    public String updatePet(PetForm form, @LoginUser SessionUser user) {
+
+        log.info("수정해서 넘어온 성별 : " + form.getGender());
+
+        User findUser = memberService.findOne(user.getEmail());
+        Pet findPet = memberService.findPet(findUser.getId());
+
+        //넘겨줄 정보 정제하기
+        Gender gender = null;
+        if (form.getGender().equals("여성")){
+            gender = Gender.여성;
+        } else {
+            gender = Gender.남성;
+        }
+
+        PetType petType = null;
+        if (form.getPetType().equals("고양이")){
+            petType = PetType.고양이;
+        } else {
+            petType = PetType.개;
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
+
+        memberService.updatePet(form.getName(), gender, petType, form.getBreed(),
+                birthDate, form.getRemark(), findPet);
+
+        return "redirect:/members/myPet";
+    }
+
+    @GetMapping("members/updateMyInfo")
+    public String updateInfoForm(Model model, @LoginUser SessionUser user,
+                                MemberUpdateForm form) {
+
+        User findUser = memberService.findOne(user.getEmail());
+
+        model.addAttribute("user", findUser);
+        model.addAttribute("form", form);
+
+        return "members/myInfoUpdateForm";
+    }
+
+    @PostMapping("members/updateMyInfo")
+    public String updateInfo(MemberUpdateForm form, @LoginUser SessionUser user) {
+
+        log.info("성별은 : " + form.getGender());
+        //넘겨줄 정보 정제하기
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
+        Address address = new Address(form.getSi() ,form.getGu());
+
+        Gender gender = null;
+        if (form.getGender().equals("여성")){
+            gender = Gender.여성;
+        } else {
+            gender = Gender.남성;
+        }
+
+        //개인정보 객체 생성
+        PrivateInformation privateInformation =
+                new PrivateInformation(birthDate, address, form.getPhoneNumber(), gender);
+
+        memberService.updateUserInfo(user.getEmail(), privateInformation);
+        return "redirect:/members/myInfo";
+
     }
 
 }
