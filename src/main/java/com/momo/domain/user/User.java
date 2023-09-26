@@ -1,6 +1,7 @@
 package com.momo.domain.user;
 
 import com.momo.domain.BaseTimeEntity;
+import com.momo.domain.Item;
 import com.momo.domain.member.MemberType;
 import com.momo.domain.member.Pet;
 import com.momo.domain.member.PrivateInformation;
@@ -44,6 +45,9 @@ public class User extends BaseTimeEntity  {
     //=멤버 변수=//
     @Embedded
     private PrivateInformation privateInformation;
+
+    @OneToMany(mappedBy = "sitter")
+    private List<Item> items = new ArrayList<>();
 
 //    @Builder
 //    public User(String name, String email, String picture, Role role, PrivateInformation privateInformation) {

@@ -3,7 +3,10 @@ package com.momo.controller;
 import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.Item;
+import com.momo.domain.member.PrivateInformation;
+import com.momo.domain.user.User;
 import com.momo.service.ItemService;
+import com.momo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -23,12 +26,20 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final MemberService memberService;
 
 
     @GetMapping("/items/new")
     public String createForm(Model model, @LoginUser SessionUser user) {
+        User findUser = memberService.findOne(user.getEmail());
+
+        if (findUser.getUserType() == null) {
+            return "redirect:/members/beSitter";
+        }
+
         model.addAttribute("form", new ItemForm());
         model.addAttribute("user", user);
+        model.addAttribute("privateInformation", findUser.getPrivateInformation());
         log.info("로그인 이름 : " + user.getName());
         return "items/createItemForm";
     }
@@ -36,7 +47,6 @@ public class ItemController {
     @PostMapping("/items/new")
     public String create(ItemForm form) {
         Item item = new Item();
-        item.setNickname(form.getNickname());
         item.setPrice(form.getPrice());
         item.setIntroduction(form.getIntroduction());
 
@@ -46,6 +56,9 @@ public class ItemController {
 
         item.setStartDate(startDateTime);
         item.setEndDate(endDateTime);
+
+        item.setDog(form.getDog());
+        item.setCat(form.getCat());
 
         itemService.saveItem(item);
         return "redirect:/";
@@ -63,7 +76,6 @@ public class ItemController {
         Item item = (Item) itemService.findOne(itemId);
 
         ItemForm form = new ItemForm();
-        form.setNickname(item.getNickname());
         form.setPrice(item.getPrice());
         form.setIntroduction(item.getIntroduction());
         form.setStartDate(String.valueOf(item.getStartDate()));
