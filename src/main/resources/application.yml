@@ -18,15 +18,23 @@ spring:
       hibernate:
 #        show_sql: true # log에 출력되는 것이 아니라 sysout에 출력 됨
         format_sql: true
+
   # OAuth
   profiles:
-    include: oauth # application-oauth.yml 을 참조 함
+    include:
+      - oauth # application-oauth.yml 을 참조
+      - aws # AWS S3 보안 파일 참조
 
   # Session Store
   session:
     store-type: jdbc
     jdbc:
       initialize-schema: always # 항상 스키마 초기화
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 logging:
   level:
