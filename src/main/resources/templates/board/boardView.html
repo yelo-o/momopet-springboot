@@ -8,6 +8,8 @@
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
+
+
 <div class="layout" th:object="${form}">
     <form action="/board/write" method="post">
         <div class="container">
@@ -17,7 +19,8 @@
                 <label th:for="board.content">내용</label>
                 <textarea type="text" th:field="${board.content}" class="form-control" rows="15" readonly></textarea>
                 <div class="text-center"><br>
-                    <a class="btn btn-secondary" th:href="@{/board/delete(id=${board.id})}">글 삭제</a>
+                    <a class="btn btn-secondary text-white" th:href="@{/board/list}">뒤로가기</a>
+                    <a class="btn btn-info" th:href="@{/board/delete(id=${board.id})}">글 삭제</a>
                     <a class="btn btn-primary" th:href="@{/board/modify/{id}(id = ${board.id})}">수정</a>
                 </div>
             </div>
@@ -25,6 +28,7 @@
         </div>
     </form>
 </div>
+
 
 
 </body>

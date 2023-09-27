@@ -10,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @Slf4j
@@ -22,13 +25,18 @@ public class BoardController {
     private MemberService memberService;
 
     @GetMapping("/board/write")     //localhost:9090/board/write
-    public String boardWriteForm(Model model, BoardForm form){
-        model.addAttribute("form", form);
-        return "board/boardwrite";
+    public String boardWriteForm(Model model){
+        model.addAttribute("form", new BoardForm());
+        return "board/boardWrite";
     }
 
     @PostMapping("/board/write")
-    public  String boardWritePro(BoardForm form, Model model, @LoginUser SessionUser user) {
+    public  String boardWritePro(@Valid BoardForm form, BindingResult bindingResult, Model model, @LoginUser SessionUser user) {
+
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("form", form);
+            return "board/boardWrite";
+        }
 
         Board board = new Board();
         board.setTitle(form.getTitle());
@@ -44,6 +52,9 @@ public class BoardController {
 
         boardService.write(board);
 
+
+
+        //게시글 작성 후 list페이지로 이동
         model.addAttribute("message", "글작성이 완료되었습니다.");
         model.addAttribute("searchUrl", "/board/list");
 
@@ -55,20 +66,23 @@ public class BoardController {
 
         model.addAttribute("list", boardService.boardList());
 
-        return "board/boardlist";
+        return "board/boardList";
     }
 
     @GetMapping ("/board/view") //localhost:9090/board/view?id=1
     public String boardView(Model model, Integer id) {
         model.addAttribute("board", boardService.boardView(id));
-        return "board/boardview";
+        return "board/boardView";
     }
 
     @GetMapping("/board/delete")
-    public String boardDelete(Integer id) {
+    public String boardDelete(Integer id, Model model) {
         boardService.boardDelete(id);
 
-        return "redirect:/board/list";
+        model.addAttribute("message", "글이 삭제되었습니다.");
+        model.addAttribute("searchUrl", "/board/list");
+
+        return "board/message";
     }
 
     @GetMapping("/board/modify/{id}")
@@ -76,7 +90,7 @@ public class BoardController {
 
         model.addAttribute("board", boardService.boardView(id));
 
-        return "board/boardmodify";
+        return "board/boardModify";
     }
 
     @PostMapping("/board/update/{id}")
