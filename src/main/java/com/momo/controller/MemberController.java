@@ -151,7 +151,7 @@ public class MemberController {
 
     @GetMapping("members/updateMyPet")
     public String updatePetForm(Model model, @LoginUser SessionUser user,
-                                @Valid PetForm form) {
+                                PetForm form) {
         User findUser = memberService.findOne(user.getEmail());
         Pet findPet = memberService.findPet(findUser.getId());
 
@@ -163,12 +163,19 @@ public class MemberController {
     }
 
     @PostMapping("members/updateMyPet")
-    public String updatePet(PetForm form, @LoginUser SessionUser user) {
-
-        log.info("수정해서 넘어온 성별 : " + form.getGender());
+    public String updatePet(@Valid PetForm form, BindingResult result,
+                            Model model, @LoginUser SessionUser user) {
 
         User findUser = memberService.findOne(user.getEmail());
         Pet findPet = memberService.findPet(findUser.getId());
+
+        if (result.hasErrors()) {
+//            model.addAttribute("user", findUser);
+//            model.addAttribute("pet", findPet);
+//            model.addAttribute("form", form);
+            return "redirect:/members/updateMyPet";
+        }
+
 
         //넘겨줄 정보 정제하기
         Gender gender = null;
@@ -207,9 +214,14 @@ public class MemberController {
     }
 
     @PostMapping("members/updateMyInfo")
-    public String updateInfo(MemberUpdateForm form, @LoginUser SessionUser user) {
+    public String updateInfo(@Valid MemberUpdateForm form, BindingResult result,
+                             @LoginUser SessionUser user, Model model) {
 
-        log.info("성별은 : " + form.getGender());
+        if (result.hasErrors()) {
+            model.addAttribute("form", form);
+            return "redirect:/members/updateMyInfo";
+        }
+
         //넘겨줄 정보 정제하기
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
