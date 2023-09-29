@@ -12,6 +12,7 @@
 <div class="container">
 
     <!-- Page Heading -->
+    <br>
     <h1 class="h3 mb-2 text-gray-800">내 펫 자랑하기 게시판</h1>
     <p class="mb-4">※내 펫을 자랑해봐요※</p>
 
@@ -73,15 +74,15 @@
                                 </thead>
 
                                 <tbody>
-
                                 <tr class="odd" th:each="board : ${list}">
                                     <td class="sorting_1" th:text="${board.id}">글번호</td>
-                                    <td><a th:text="${board.title}" th:href="@{/board/view(id=${board.id})}">제목</a></td>
+                                    <td>
+                                        <a th:text="${board.title}" th:href="@{/board/{id}(id=${board.id})}" >제목</a>
+                                    </td>
                                     <td th:text="${board.name}">조용훈</td>
                                     <td th:text="${board.getCreatedDate()}">2008/11/28</td>
-                                    <td>~조회수는 나중에구현~</td>
+                                    <td th:text="${board.views}">조회수</td>
                                 </tr>
-
                                 </tbody>
                             </table>
                         </div>
