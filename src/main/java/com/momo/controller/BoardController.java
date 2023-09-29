@@ -4,16 +4,19 @@ import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.Board;
 import com.momo.domain.user.User;
+import com.momo.repository.BoardRepository;
 import com.momo.service.BoardService;
 import com.momo.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -23,6 +26,12 @@ public class BoardController {
     private BoardService boardService;
     @Autowired
     private MemberService memberService;
+
+    private final BoardRepository boardRepository;
+    @Autowired
+    public BoardController(BoardRepository boardRepository){
+        this.boardRepository = boardRepository;
+    }
 
     @GetMapping("/board/write")     //localhost:9090/board/write
     public String boardWriteForm(Model model){
@@ -107,6 +116,19 @@ public class BoardController {
 
 
         return "board/message";
+    }
+
+    //조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가
+    @GetMapping("/board/{id}")
+    public String getBoard(@PathVariable Integer id, Model model) {
+        Optional<Board> optionalboard = boardRepository.findById(id);
+        if(optionalboard.isPresent()) {
+            Board board = optionalboard.get();
+            board.setViews(board.getViews() + 1);   //조회수 증가
+            boardRepository.save(board);            //변경된 조회수를 저장
+            model.addAttribute("board", board);
+        }
+        return "board/boardView";
     }
 
 }
