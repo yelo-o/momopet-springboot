@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -25,6 +26,8 @@ import java.time.format.DateTimeFormatter;
 public class MemberController {
 
     private final MemberService memberService;
+
+    Gender gender = null;
 
     /**
      * 시터 등록 폼으로 이동
@@ -52,7 +55,7 @@ public class MemberController {
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
         Address address = new Address(form.getSi() ,form.getGu());
 
-        Gender gender = null;
+//        Gender gender = null;
         if (form.getGender().equals("여성")){
             gender = Gender.여성;
         } else {
@@ -116,7 +119,7 @@ public class MemberController {
         }
 
         //넘겨줄 정보 정제하기
-        Gender gender = null;
+//        Gender gender = null;
         if (form.getGender().equals("여성")){
             gender = Gender.여성;
         } else {
@@ -178,7 +181,7 @@ public class MemberController {
 
 
         //넘겨줄 정보 정제하기
-        Gender gender = null;
+
         if (form.getGender().equals("여성")){
             gender = Gender.여성;
         } else {
@@ -203,7 +206,7 @@ public class MemberController {
 
     @GetMapping("members/updateMyInfo")
     public String updateInfoForm(Model model, @LoginUser SessionUser user,
-                                MemberUpdateForm form) {
+                                 MemberUpdateForm form) {
 
         User findUser = memberService.findOne(user.getEmail());
 
@@ -214,12 +217,14 @@ public class MemberController {
     }
 
     @PostMapping("members/updateMyInfo")
-    public String updateInfo(@Valid MemberUpdateForm form, BindingResult result,
+    public String updateInfo(@ModelAttribute("form") @Valid MemberUpdateForm form, BindingResult result,
                              @LoginUser SessionUser user, Model model) {
 
         if (result.hasErrors()) {
-            model.addAttribute("form", form);
-            return "redirect:/members/updateMyInfo";
+            User findUser = memberService.findOne(user.getEmail());
+            model.addAttribute("user", findUser);
+//            model.addAttribute("form", form);
+            return "/members/myInfoUpdateForm";
         }
 
         //넘겨줄 정보 정제하기
@@ -227,7 +232,7 @@ public class MemberController {
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
         Address address = new Address(form.getSi() ,form.getGu());
 
-        Gender gender = null;
+//        Gender gender = null;
         if (form.getGender().equals("여성")){
             gender = Gender.여성;
         } else {
