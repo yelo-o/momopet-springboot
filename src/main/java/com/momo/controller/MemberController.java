@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -25,6 +27,9 @@ import java.time.format.DateTimeFormatter;
 public class MemberController {
 
     private final MemberService memberService;
+
+
+    Gender gender = null;
 
     /**
      * 시터 등록 폼으로 이동
@@ -52,7 +57,7 @@ public class MemberController {
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
         Address address = new Address(form.getSi() ,form.getGu());
 
-        Gender gender = null;
+//        Gender gender = null;
         if (form.getGender().equals("여성")){
             gender = Gender.여성;
         } else {
@@ -107,16 +112,22 @@ public class MemberController {
     }
 
     @PostMapping("/members/myPet")
-    public String enrollPet(@Valid PetForm form, BindingResult result,
-                            @LoginUser SessionUser user) {
+
+    public String enrollPet(@ModelAttribute("form") @Valid PetForm form, BindingResult result,
+                            @LoginUser SessionUser user, Model model) {
+
+        User findUser = memberService.findOne(user.getEmail());
+        Pet findPet = memberService.findPet(findUser.getId());
+
+        model.addAttribute("user", findUser);
 
         //PetEnrollForm에 오류가 있는지 확인 (Validation)
         if (result.hasErrors()) {
-            return "redirect:/members/myPet"; //현재 validation 안됨 (리다이렉트만 됨)
+            return "members/myPetEnrollForm";
         }
 
         //넘겨줄 정보 정제하기
-        Gender gender = null;
+//        Gender gender = null;
         if (form.getGender().equals("여성")){
             gender = Gender.여성;
         } else {
@@ -130,12 +141,11 @@ public class MemberController {
             petType = PetType.개;
         }
 
-        User findUser = memberService.findOne(user.getEmail());
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
 
-        //Pet 엔티티에 저장하기
+
+        //Pet 엔티티에 저장
         memberService.add( Pet.builder()
                 .name(form.getName())
                 .petType(petType)
@@ -144,14 +154,16 @@ public class MemberController {
                 .birthDate(birthDate)
                 .remark(form.getRemark())
                 .owner(findUser)
-                .build(), findUser);
+                .build());
+
+        findUser.upgrade(); //SITTER => OWNER 업그레이드
 
         return "redirect:/members/myPet";
     }
 
     @GetMapping("members/updateMyPet")
     public String updatePetForm(Model model, @LoginUser SessionUser user,
-                                @Valid PetForm form) {
+                                PetForm form) {
         User findUser = memberService.findOne(user.getEmail());
         Pet findPet = memberService.findPet(findUser.getId());
 
@@ -163,15 +175,20 @@ public class MemberController {
     }
 
     @PostMapping("members/updateMyPet")
-    public String updatePet(PetForm form, @LoginUser SessionUser user) {
-
-        log.info("수정해서 넘어온 성별 : " + form.getGender());
+    public String updatePet(@Valid PetForm form, BindingResult result,
+                            Model model, @LoginUser SessionUser user) {
 
         User findUser = memberService.findOne(user.getEmail());
         Pet findPet = memberService.findPet(findUser.getId());
 
+        if (result.hasErrors()) {
+//            model.addAttribute("user", findUser);
+//            model.addAttribute("pet", findPet);
+//            model.addAttribute("form", form);
+            return "redirect:/members/updateMyPet";
+        }
+
         //넘겨줄 정보 정제하기
-        Gender gender = null;
         if (form.getGender().equals("여성")){
             gender = Gender.여성;
         } else {
@@ -196,7 +213,7 @@ public class MemberController {
 
     @GetMapping("members/updateMyInfo")
     public String updateInfoForm(Model model, @LoginUser SessionUser user,
-                                MemberUpdateForm form) {
+                                 MemberUpdateForm form) {
 
         User findUser = memberService.findOne(user.getEmail());
 
@@ -207,15 +224,22 @@ public class MemberController {
     }
 
     @PostMapping("members/updateMyInfo")
-    public String updateInfo(MemberUpdateForm form, @LoginUser SessionUser user) {
+    public String updateInfo(@ModelAttribute("form") @Valid MemberUpdateForm form, BindingResult result,
+                             @LoginUser SessionUser user, Model model) {
 
-        log.info("성별은 : " + form.getGender());
+        if (result.hasErrors()) {
+            User findUser = memberService.findOne(user.getEmail());
+            model.addAttribute("user", findUser);
+//            model.addAttribute("form", form);
+            return "/members/myInfoUpdateForm";
+        }
+
         //넘겨줄 정보 정제하기
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
         Address address = new Address(form.getSi() ,form.getGu());
 
-        Gender gender = null;
+//        Gender gender = null;
         if (form.getGender().equals("여성")){
             gender = Gender.여성;
         } else {

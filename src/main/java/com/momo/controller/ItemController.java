@@ -8,6 +8,7 @@ import com.momo.domain.user.User;
 import com.momo.service.ItemService;
 import com.momo.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,8 +46,19 @@ public class ItemController {
     }
 
     @PostMapping("/items/new")
-    public String create(ItemForm form) {
+
+    public String create(ItemForm form, @LoginUser SessionUser user) {
+
         Item item = new Item();
+
+        User findUser = memberService.findOne(user.getEmail());
+
+        item.setSitter(findUser);
+        item.setName(findUser.getName());
+        item.setEmail(findUser.getEmail());
+        item.setPicture(findUser.getPicture());
+        item.setSi(findUser.getPrivateInformation().getAddress().getSi());
+        item.setGu(findUser.getPrivateInformation().getAddress().getGu());
         item.setPrice(form.getPrice());
         item.setIntroduction(form.getIntroduction());
 
@@ -78,8 +90,14 @@ public class ItemController {
         ItemForm form = new ItemForm();
         form.setPrice(item.getPrice());
         form.setIntroduction(item.getIntroduction());
-        form.setStartDate(String.valueOf(item.getStartDate()));
-        form.setEndDate(String.valueOf(item.getEndDate()));
+      
+        log.info("start 날짜타입 날짜:" + item.getStartDate());
+        form.setStartDate(item.getStartDate().toString().replace("T", " "));
+        form.setEndDate(item.getEndDate().toString().replace("T", " "));
+        log.info("start 스트링타입 날짜:" + item.getStartDate().toString().replace("T", " "));
+
+        form.setDog(item.getDog());
+        form.setCat(item.getCat());
 
         model.addAttribute("form", form);
         return "items/updateItemForm";
@@ -87,7 +105,12 @@ public class ItemController {
 
     @PostMapping("/items/{itemId}/edit")
     public String updateItem(@PathVariable Long itemId, @ModelAttribute("form") ItemForm form) {
-        itemService.updateItem(itemId, form.getPrice(), form.getIntroduction());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime startDateTime = LocalDateTime.parse(form.getStartDate(), formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse(form.getEndDate(), formatter);
+
+        itemService.updateItem(itemId, form.getPrice(), form.getIntroduction(), startDateTime, endDateTime,  form.getDog(), form.getCat());
         return "redirect:/items";
     }
 }

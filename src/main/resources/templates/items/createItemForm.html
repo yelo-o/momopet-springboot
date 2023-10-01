@@ -25,6 +25,8 @@
             <label th:for="privateInformation.gender">성별</label>
             <input type="text" th:field="${privateInformation.gender}" class="form-control" readonly>
         </div>
+
+        <br/>
         <h6>주소</h6>
         <div class="form-group">
             <label th:for="privateInformation.address.si">시</label>
@@ -32,6 +34,7 @@
             <label th:for="privateInformation.address.gu">구</label>
             <input type="text" th:field="${privateInformation.address.gu}" class="form-control" readonly>
         </div>
+        <hr>
         <div class="form-group">
             <label th:for="price">일급</label>
             <input class="form-control" placeholder="일급을 입력하세요" th:field="*{price}"
@@ -41,9 +44,16 @@
             <textarea class="form-control" placeholder="자기소개를 입력하세요" th:field="*{introduction}"
                    type="text"></textarea>
         <div class="form-group">
+
+            <label th:for="daterange">가능날짜</label>
+            <input class="form-control" type="text" name="daterange" readonly/>
+            <input type="hidden" th:field="*{startDate}"/>
+            <input type="hidden" th:field="*{endDate}"/>
+        </div>
+        <div class="form-group">
             <label th:for="pettype">돌봄 가능 펫</label>
             <br/>
-            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+<!--            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
                 <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
                 <input type="hidden" name="_btncheck1" value="on"/>
                 <label class="btn btn-outline-primary" for="btncheck1">개</label>
@@ -51,14 +61,16 @@
                 <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
                 <input type="hidden" name="_btncheck2" value="on"/>
                 <label class="btn btn-outline-primary" for="btncheck2">고양이</label>
+            </div>-->
+            <div class="form-check">
+                <input type="checkbox" id="dog" name="dog" value="true" />
+                <input type="hidden" name="_dog" value="on" />
+                <label for="dog" class="form-check-label">개</label>
+                <input type="checkbox" id="cat" name="cat" value="true" />
+                <input type="hidden" name="_cat" value="on" />
+                <label for="cat" class="form-check-label">고양이</label>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label th:for="daterange">가능날짜</label>
-            <input class="form-control" type="text" name="daterange" readonly/>
-            <input type="hidden" th:field="*{startDate}"/>
-            <input type="hidden" th:field="*{endDate}"/>
         </div>
         <br>
         <div class="text-center">
@@ -100,8 +112,6 @@
                         "12월"
                     ],
                 },
-                /*startDate: $('input[name="startDate"]').val(),
-                endDate: $('input[name="endDate"]').val(),*/
 
                 drops: "auto",
             },

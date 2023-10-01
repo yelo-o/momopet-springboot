@@ -4,13 +4,21 @@ import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.Board;
 import com.momo.domain.user.User;
+
+import com.momo.repository.BoardRepository;
 import com.momo.service.BoardService;
 import com.momo.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.Optional;
+
 
 @Controller
 @Slf4j
@@ -21,14 +29,26 @@ public class BoardController {
     @Autowired
     private MemberService memberService;
 
+    private final BoardRepository boardRepository;
+    @Autowired
+    public BoardController(BoardRepository boardRepository){
+        this.boardRepository = boardRepository;
+    }
+
     @GetMapping("/board/write")     //localhost:9090/board/write
-    public String boardWriteForm(Model model, BoardForm form){
-        model.addAttribute("form", form);
-        return "board/boardwrite";
+    public String boardWriteForm(Model model){
+        model.addAttribute("form", new BoardForm());
+        return "board/boardWrite";
     }
 
     @PostMapping("/board/write")
-    public  String boardWritePro(BoardForm form, Model model, @LoginUser SessionUser user) {
+    public  String boardWritePro(@Valid BoardForm form, BindingResult bindingResult, Model model, @LoginUser SessionUser user) {
+
+        if(bindingResult.hasErrors()) {
+            model.addAttribute("form", form);
+            return "board/boardWrite";
+        }
+
 
         Board board = new Board();
         board.setTitle(form.getTitle());
@@ -44,6 +64,8 @@ public class BoardController {
 
         boardService.write(board);
 
+
+        //게시글 작성 후 list페이지로 이동
         model.addAttribute("message", "글작성이 완료되었습니다.");
         model.addAttribute("searchUrl", "/board/list");
 
@@ -54,21 +76,23 @@ public class BoardController {
     public String boardList(Model model){
 
         model.addAttribute("list", boardService.boardList());
-
-        return "board/boardlist";
+        return "board/boardList";
     }
 
     @GetMapping ("/board/view") //localhost:9090/board/view?id=1
     public String boardView(Model model, Integer id) {
         model.addAttribute("board", boardService.boardView(id));
-        return "board/boardview";
+        return "board/boardView";
     }
 
     @GetMapping("/board/delete")
-    public String boardDelete(Integer id) {
+    public String boardDelete(Integer id, Model model) {
         boardService.boardDelete(id);
 
-        return "redirect:/board/list";
+        model.addAttribute("message", "글이 삭제되었습니다.");
+        model.addAttribute("searchUrl", "/board/list");
+
+        return "board/message";
     }
 
     @GetMapping("/board/modify/{id}")
@@ -76,7 +100,8 @@ public class BoardController {
 
         model.addAttribute("board", boardService.boardView(id));
 
-        return "board/boardmodify";
+
+        return "board/boardModify";
     }
 
     @PostMapping("/board/update/{id}")
@@ -95,4 +120,16 @@ public class BoardController {
         return "board/message";
     }
 
+    //조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가
+    @GetMapping("/board/{id}")
+    public String getBoard(@PathVariable Integer id, Model model) {
+        Optional<Board> optionalboard = boardRepository.findById(id);
+        if(optionalboard.isPresent()) {
+            Board board = optionalboard.get();
+            board.setViews(board.getViews() + 1);   //조회수 증가
+            boardRepository.save(board);            //변경된 조회수를 저장
+            model.addAttribute("board", board);
+        }
+        return "board/boardView";
+    }
 }

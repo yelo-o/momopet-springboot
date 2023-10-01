@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header">
+<head>
+    <div th:replace="fragments/header :: header"></div>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
 </head>
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 <div class="container">
-    <table class="table table-striped table-sm">
+    <table class="table table-striped table-sm text-center">
     <thead> <tr>
-        <th>일급</th> <th>자기소개</th> <th>가능시작날짜</th> <th>가능마지막날짜</th> <th></th>
+        <th>프로필사진</th> <th>일급</th> <th>자기소개</th> <th>돌봄가능펫</th> <th>주소</th>
+        <th>가능시작날짜</th> <th>가능마지막날짜</th> <th></th>
     </tr>
     </thead>
         <tbody>
         <tr th:each="item : ${items}">
+            <td>
+            <div>
+                <img th:src="${item.picture}" alt="" class="rounded-circle mx-auto d-block">
+            </div>
+            </td>
             <td th:text="${item.price}"></td>
             <td th:text="${item.introduction}"></td>
+            <td> <span th:if="${item.dog}">개</span> <span th:if="${item.cat}">고양이</span></td>
+            <td> <span th:text="${item.si}"></span> <span th:text="${item.gu}"></span></td>
             <td th:text="${#temporals.format(item.startDate, 'yyyy-MM-dd hh:mm')}"></td>
             <td th:text="${#temporals.format(item.endDate, 'yyyy-MM-dd hh:mm')}"></td>
             <td>
@@ -23,8 +32,9 @@
         </tr>
         </tbody>
     </table>
-
     <div th:replace="fragments/footer :: footer"/>
 </div> <!-- /container -->
+
+
 </body>
 </html>
