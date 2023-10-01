@@ -110,12 +110,17 @@ public class MemberController {
     }
 
     @PostMapping("/members/myPet")
-    public String enrollPet(@Valid PetForm form, BindingResult result,
-                            @LoginUser SessionUser user) {
+    public String enrollPet(@ModelAttribute("form") @Valid PetForm form, BindingResult result,
+                            @LoginUser SessionUser user, Model model) {
+
+        User findUser = memberService.findOne(user.getEmail());
+        Pet findPet = memberService.findPet(findUser.getId());
+
+        model.addAttribute("user", findUser);
 
         //PetEnrollForm에 오류가 있는지 확인 (Validation)
         if (result.hasErrors()) {
-            return "redirect:/members/myPet"; //현재 validation 안됨 (리다이렉트만 됨)
+            return "members/myPetEnrollForm";
         }
 
         //넘겨줄 정보 정제하기
@@ -133,12 +138,11 @@ public class MemberController {
             petType = PetType.개;
         }
 
-        User findUser = memberService.findOne(user.getEmail());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
 
-        //Pet 엔티티에 저장하기
+        //Pet 엔티티에 저장
         memberService.add( Pet.builder()
                 .name(form.getName())
                 .petType(petType)
@@ -147,7 +151,9 @@ public class MemberController {
                 .birthDate(birthDate)
                 .remark(form.getRemark())
                 .owner(findUser)
-                .build(), findUser);
+                .build());
+
+        findUser.upgrade(); //SITTER => OWNER 업그레이드
 
         return "redirect:/members/myPet";
     }
@@ -179,9 +185,7 @@ public class MemberController {
             return "redirect:/members/updateMyPet";
         }
 
-
         //넘겨줄 정보 정제하기
-
         if (form.getGender().equals("여성")){
             gender = Gender.여성;
         } else {
