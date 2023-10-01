@@ -46,6 +46,7 @@ public class ItemController {
     }
 
     @PostMapping("/items/new")
+
     public String create(ItemForm form, @LoginUser SessionUser user) {
 
         Item item = new Item();
@@ -58,7 +59,6 @@ public class ItemController {
         item.setPicture(findUser.getPicture());
         item.setSi(findUser.getPrivateInformation().getAddress().getSi());
         item.setGu(findUser.getPrivateInformation().getAddress().getGu());
-
         item.setPrice(form.getPrice());
         item.setIntroduction(form.getIntroduction());
 
@@ -83,7 +83,6 @@ public class ItemController {
         return "items/itemList";
     }
 
-
     @GetMapping("/items/{itemId}/edit")
     public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
         Item item = (Item) itemService.findOne(itemId);
@@ -91,6 +90,7 @@ public class ItemController {
         ItemForm form = new ItemForm();
         form.setPrice(item.getPrice());
         form.setIntroduction(item.getIntroduction());
+      
         log.info("start 날짜타입 날짜:" + item.getStartDate());
         form.setStartDate(item.getStartDate().toString().replace("T", " "));
         form.setEndDate(item.getEndDate().toString().replace("T", " "));

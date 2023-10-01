@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -26,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 public class MemberController {
 
     private final MemberService memberService;
+
 
     Gender gender = null;
 
@@ -110,6 +112,7 @@ public class MemberController {
     }
 
     @PostMapping("/members/myPet")
+
     public String enrollPet(@ModelAttribute("form") @Valid PetForm form, BindingResult result,
                             @LoginUser SessionUser user, Model model) {
 
@@ -138,9 +141,9 @@ public class MemberController {
             petType = PetType.개;
         }
 
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
+
 
         //Pet 엔티티에 저장
         memberService.add( Pet.builder()

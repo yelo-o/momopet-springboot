@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <head th:replace="fragments/header :: header"/>
+    <meta charset="UTF-8">
+    <title>게시물 작성폼</title>
+</head>
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<style>
+    .layout {
+        width: 500px;
+        margin: 0 auto;
+        margin-top: 40px;
+    }
+
+    .layout input {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .layout textarea {
+        width: 100%;
+        margin-top: 10px;
+        min-height: 300px;
+    }
+</style>
+
+<body>
+<div class="container">
+    <div class="layout" th:object="${form}">
+        <form action="/board/write" method="post">
+            <div>제목:<input placeholder="제목을 입력해 주세요." type="text" th:field="*{title}"></div>
+            <div>내용:<textarea placeholder="내용을 입력해 주세요." th:field="*{content}"></textarea></div>
+            <div class="text-center">
+                <button class="btn btn-primary text-white" type="submit">작성</button>
+            </div>
+        </form>
+    </div>
+    <div th:replace="fragments/footer :: footer"/>
+</div>
+</body>
+</html>

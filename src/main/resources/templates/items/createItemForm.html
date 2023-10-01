@@ -25,6 +25,7 @@
             <label th:for="privateInformation.gender">성별</label>
             <input type="text" th:field="${privateInformation.gender}" class="form-control" readonly>
         </div>
+
         <br/>
         <h6>주소</h6>
         <div class="form-group">
@@ -43,6 +44,7 @@
             <textarea class="form-control" placeholder="자기소개를 입력하세요" th:field="*{introduction}"
                    type="text"></textarea>
         <div class="form-group">
+
             <label th:for="daterange">가능날짜</label>
             <input class="form-control" type="text" name="daterange" readonly/>
             <input type="hidden" th:field="*{startDate}"/>
@@ -110,6 +112,7 @@
                         "12월"
                     ],
                 },
+
                 drops: "auto",
             },
             function (start, end) {

@@ -4,6 +4,7 @@ import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.Board;
 import com.momo.domain.user.User;
+
 import com.momo.repository.BoardRepository;
 import com.momo.service.BoardService;
 import com.momo.service.MemberService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
+
 
 @Controller
 @Slf4j
@@ -47,6 +49,7 @@ public class BoardController {
             return "board/boardWrite";
         }
 
+
         Board board = new Board();
         board.setTitle(form.getTitle());
         board.setContent(form.getContent());
@@ -62,7 +65,6 @@ public class BoardController {
         boardService.write(board);
 
 
-
         //게시글 작성 후 list페이지로 이동
         model.addAttribute("message", "글작성이 완료되었습니다.");
         model.addAttribute("searchUrl", "/board/list");
@@ -74,7 +76,6 @@ public class BoardController {
     public String boardList(Model model){
 
         model.addAttribute("list", boardService.boardList());
-
         return "board/boardList";
     }
 
@@ -98,6 +99,7 @@ public class BoardController {
     public String boardModify(@PathVariable("id") Integer id, Model model){
 
         model.addAttribute("board", boardService.boardView(id));
+
 
         return "board/boardModify";
     }
@@ -130,5 +132,4 @@ public class BoardController {
         }
         return "board/boardView";
     }
-
 }
