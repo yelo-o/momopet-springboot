@@ -63,10 +63,10 @@ public class MemberService {
 //        memberRepository.save(findUser);
     }
 
-    public void updatePet(String name, Gender gender, PetType petType,
-                          String breed, LocalDate birthDate, String remark, Pet pet) {
+    public void updatePet(String name, Gender gender, PetType petType, String breed,
+                          LocalDate birthDate, String remark, Pet pet, String photo) {
 
-        pet.update(name, gender, petType, breed, birthDate, remark);
+        pet.update(name, gender, petType, breed, birthDate, remark, photo);
     }
 
     //펫 정보 불러오기

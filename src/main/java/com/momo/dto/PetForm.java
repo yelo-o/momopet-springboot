@@ -2,6 +2,7 @@ package com.momo.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -26,5 +27,7 @@ public class PetForm {
     @NotEmpty(message = "주의사항을 입력해주세요.")
     private String remark; //주의사항
 
+//    @NotEmpty(message = "사진을 업로드해주세요.")
+    private MultipartFile photo; //사진
 
 }

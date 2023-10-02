@@ -71,6 +71,12 @@
     <div class="table-responsive">
 
         <form role="form" action="/members/updateMyPet" th:object="${pet}" method="get">
+
+            <div class="form-group">
+                <label th:for="name">사진</label>
+                <img id="image" th:src="*{photo}" height="200">
+            </div>
+
             <div class="form-group">
                 <label th:for="name">이름</label>
                 <input type="text" th:field="*{name}" class="form-control" readonly>
