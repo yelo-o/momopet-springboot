@@ -73,6 +73,7 @@
         <form role="form" action="/members/updateMyPet" th:object="${form}" method="post" enctype="multipart/form-data">
 
             <div class="form-group">
+                <img id="image" th:src="${pet.photo}" height="200">
                 사진 : <input type="file" th:field="*{photo}">
             </div>
 

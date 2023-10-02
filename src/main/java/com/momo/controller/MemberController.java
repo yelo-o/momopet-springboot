@@ -32,27 +32,6 @@ public class MemberController {
     private final S3Service s3Service;
 
     /**
-     * String class => Gender class 메소드
-     */
-    private Gender toGender(String gender) {
-        if (gender.equals("여성")) {
-            return Gender.여성;
-        } else {
-            return Gender.남성;
-        }
-    }
-
-    /**
-     * String class => PetType class 메소드
-     */
-    private PetType toPetType(String petType) {
-        if (petType.equals("고양이")){
-            return PetType.고양이;
-        } else {
-            return PetType.개;
-        }
-    }
-    /**
      * String class => LocalDate class 메소드
      */
     private LocalDate toLocalDate(String date) {
@@ -82,14 +61,14 @@ public class MemberController {
         }
 
         //넘겨줄 정보 정제하기
-        Gender gender = toGender(form.getGender()); //성별
+        Gender gender = (form.getGender().equals("여성")) ? Gender.여성 : Gender.남성; //성별
         LocalDate birthDate = toLocalDate(form.getBirthDate()); //날짜
         Address address = new Address(form.getSi() ,form.getGu()); //주소
-
+        String phoneNumber = form.getPhoneNumber();
 
         //개인정보 객체 생성
         PrivateInformation privateInformation =
-                new PrivateInformation(birthDate, address, form.getPhoneNumber(), gender);
+                new PrivateInformation(birthDate, address, phoneNumber, gender);
 
         memberService.updateUser(user.getEmail(), privateInformation);
 
@@ -149,21 +128,25 @@ public class MemberController {
         }
 
         //넘겨줄 정보 정제하기
-        Gender gender = toGender(form.getGender()); //성별
-        PetType petType = toPetType(form.getPetType()); //애완동물 타입
+        Gender gender = (form.getGender().equals("여성")) ? Gender.여성 : Gender.남성; //성별
+        PetType petType = (form.getPetType().equals("고양이")) ? PetType.고양이 : PetType.개; //애완동물 타입
         LocalDate birthDate = toLocalDate(form.getBirthDate()); //생일
+
+        String name = form.getName();
+        String breed = form.getBreed();
+        String remark = form.getRemark();
 
         //사진 url 받기
         String photo = s3Service.uploadFile(form.getPhoto());
 
         //Pet 엔티티에 저장
         memberService.add( Pet.builder()
-                .name(form.getName())
+                .name(name)
                 .petType(petType)
                 .gender(gender)
-                .breed(form.getBreed())
+                .breed(breed)
                 .birthDate(birthDate)
-                .remark(form.getRemark())
+                .remark(remark)
                 .owner(findUser)
                 .photo(photo)
                 .build());
@@ -198,13 +181,19 @@ public class MemberController {
         }
 
         //넘겨줄 정보 정제하기
-        Gender gender = toGender(form.getGender()); //성별
-        PetType petType = toPetType(form.getPetType()); //애완동물 타입
+        Gender gender = (form.getGender().equals("여성")) ? Gender.여성 : Gender.남성; //성별
+        PetType petType = (form.getPetType().equals("고양이")) ? PetType.고양이 : PetType.개; //애완동물 타입
         LocalDate birthDate = toLocalDate(form.getBirthDate()); //생일
-        String photo = s3Service.uploadFile(form.getPhoto()); //사진 url
 
-        memberService.updatePet(form.getName(), gender, petType, form.getBreed(),
-                birthDate, form.getRemark(), findPet, photo);
+        String name = form.getName();
+        String breed = form.getBreed();
+        String remark = form.getRemark();
+
+        //사진 url
+        String photo = s3Service.uploadFile(form.getPhoto());
+
+        memberService.updatePet(name, gender, petType, breed,
+                birthDate, remark, findPet, photo);
 
         return "redirect:/members/myPet";
     }
@@ -232,13 +221,14 @@ public class MemberController {
         }
 
         //넘겨줄 정보 정제하기
-        Gender gender = toGender(form.getGender()); //성별
+        Gender gender = (form.getGender().equals("여성")) ? Gender.여성 : Gender.남성; //성별
         LocalDate birthDate = toLocalDate(form.getBirthDate()); //날짜
         Address address = new Address(form.getSi() ,form.getGu()); //주소
+        String phoneNumber = form.getPhoneNumber();
 
         //개인정보 객체 생성
         PrivateInformation privateInformation =
-                new PrivateInformation(birthDate, address, form.getPhoneNumber(), gender);
+                new PrivateInformation(birthDate, address, phoneNumber, gender);
 
         memberService.updateUserInfo(user.getEmail(), privateInformation);
         return "redirect:/members/myInfo";
