@@ -40,10 +40,10 @@ public class BoardController {
     }
 
     @PostMapping("/board/write")
-    public  String boardWritePro(@Valid BoardForm form, BindingResult bindingResult, Model model, @LoginUser SessionUser user) {
+    public  String boardWritePro(@ModelAttribute("form") @Valid BoardForm form, BindingResult bindingResult,
+                                 Model model, @LoginUser SessionUser user) {
 
         if(bindingResult.hasErrors()) {
-            model.addAttribute("form", form);
             return "board/boardWrite";
         }
 
