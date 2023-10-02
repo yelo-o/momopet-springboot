@@ -7,6 +7,7 @@ import com.momo.domain.user.User;
 import com.momo.dto.MemberUpdateForm;
 import com.momo.dto.PetForm;
 import com.momo.service.MemberService;
+import com.momo.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -27,7 +29,36 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    Gender gender = null;
+    private final S3Service s3Service;
+
+    /**
+     * String class => Gender class 메소드
+     */
+    private Gender toGender(String gender) {
+        if (gender.equals("여성")) {
+            return Gender.여성;
+        } else {
+            return Gender.남성;
+        }
+    }
+
+    /**
+     * String class => PetType class 메소드
+     */
+    private PetType toPetType(String petType) {
+        if (petType.equals("고양이")){
+            return PetType.고양이;
+        } else {
+            return PetType.개;
+        }
+    }
+    /**
+     * String class => LocalDate class 메소드
+     */
+    private LocalDate toLocalDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(date, formatter);
+    }
 
     /**
      * 시터 등록 폼으로 이동
@@ -51,16 +82,10 @@ public class MemberController {
         }
 
         //넘겨줄 정보 정제하기
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
-        Address address = new Address(form.getSi() ,form.getGu());
+        Gender gender = toGender(form.getGender()); //성별
+        LocalDate birthDate = toLocalDate(form.getBirthDate()); //날짜
+        Address address = new Address(form.getSi() ,form.getGu()); //주소
 
-//        Gender gender = null;
-        if (form.getGender().equals("여성")){
-            gender = Gender.여성;
-        } else {
-            gender = Gender.남성;
-        }
 
         //개인정보 객체 생성
         PrivateInformation privateInformation =
@@ -110,11 +135,11 @@ public class MemberController {
     }
 
     @PostMapping("/members/myPet")
-    public String enrollPet(@ModelAttribute("form") @Valid PetForm form, BindingResult result,
-                            @LoginUser SessionUser user, Model model) {
+    public String enrollPet(@ModelAttribute("form") @Valid PetForm form,
+                            BindingResult result, @LoginUser SessionUser user,
+                            Model model) throws IOException {
 
         User findUser = memberService.findOne(user.getEmail());
-        Pet findPet = memberService.findPet(findUser.getId());
 
         model.addAttribute("user", findUser);
 
@@ -124,23 +149,12 @@ public class MemberController {
         }
 
         //넘겨줄 정보 정제하기
-//        Gender gender = null;
-        if (form.getGender().equals("여성")){
-            gender = Gender.여성;
-        } else {
-            gender = Gender.남성;
-        }
+        Gender gender = toGender(form.getGender()); //성별
+        PetType petType = toPetType(form.getPetType()); //애완동물 타입
+        LocalDate birthDate = toLocalDate(form.getBirthDate()); //생일
 
-        PetType petType = null;
-        if (form.getPetType().equals("고양이")){
-            petType = PetType.고양이;
-        } else {
-            petType = PetType.개;
-        }
-
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
+        //사진 url 받기
+        String photo = s3Service.uploadFile(form.getPhoto());
 
         //Pet 엔티티에 저장
         memberService.add( Pet.builder()
@@ -151,6 +165,7 @@ public class MemberController {
                 .birthDate(birthDate)
                 .remark(form.getRemark())
                 .owner(findUser)
+                .photo(photo)
                 .build());
 
         findUser.upgrade(); //SITTER => OWNER 업그레이드
@@ -173,37 +188,23 @@ public class MemberController {
 
     @PostMapping("members/updateMyPet")
     public String updatePet(@Valid PetForm form, BindingResult result,
-                            Model model, @LoginUser SessionUser user) {
+                            Model model, @LoginUser SessionUser user) throws IOException {
 
         User findUser = memberService.findOne(user.getEmail());
         Pet findPet = memberService.findPet(findUser.getId());
 
         if (result.hasErrors()) {
-//            model.addAttribute("user", findUser);
-//            model.addAttribute("pet", findPet);
-//            model.addAttribute("form", form);
             return "redirect:/members/updateMyPet";
         }
 
         //넘겨줄 정보 정제하기
-        if (form.getGender().equals("여성")){
-            gender = Gender.여성;
-        } else {
-            gender = Gender.남성;
-        }
-
-        PetType petType = null;
-        if (form.getPetType().equals("고양이")){
-            petType = PetType.고양이;
-        } else {
-            petType = PetType.개;
-        }
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
+        Gender gender = toGender(form.getGender()); //성별
+        PetType petType = toPetType(form.getPetType()); //애완동물 타입
+        LocalDate birthDate = toLocalDate(form.getBirthDate()); //생일
+        String photo = s3Service.uploadFile(form.getPhoto()); //사진 url
 
         memberService.updatePet(form.getName(), gender, petType, form.getBreed(),
-                birthDate, form.getRemark(), findPet);
+                birthDate, form.getRemark(), findPet, photo);
 
         return "redirect:/members/myPet";
     }
@@ -221,27 +222,19 @@ public class MemberController {
     }
 
     @PostMapping("members/updateMyInfo")
-    public String updateInfo(@ModelAttribute("form") @Valid MemberUpdateForm form, BindingResult result,
-                             @LoginUser SessionUser user, Model model) {
+    public String updateInfo(@ModelAttribute("form") @Valid MemberUpdateForm form,
+                             BindingResult result, @LoginUser SessionUser user, Model model) {
 
         if (result.hasErrors()) {
             User findUser = memberService.findOne(user.getEmail());
             model.addAttribute("user", findUser);
-//            model.addAttribute("form", form);
-            return "/members/myInfoUpdateForm";
+            return "members/myInfoUpdateForm";
         }
 
         //넘겨줄 정보 정제하기
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate birthDate = LocalDate.parse(form.getBirthDate() , formatter);
-        Address address = new Address(form.getSi() ,form.getGu());
-
-//        Gender gender = null;
-        if (form.getGender().equals("여성")){
-            gender = Gender.여성;
-        } else {
-            gender = Gender.남성;
-        }
+        Gender gender = toGender(form.getGender()); //성별
+        LocalDate birthDate = toLocalDate(form.getBirthDate()); //날짜
+        Address address = new Address(form.getSi() ,form.getGu()); //주소
 
         //개인정보 객체 생성
         PrivateInformation privateInformation =

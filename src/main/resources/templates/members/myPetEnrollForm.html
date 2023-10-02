@@ -70,7 +70,13 @@
     <h2>펫 정보</h2>
     <div class="table-responsive">
 
-        <form role="form" action="/members/myPet" th:object="${form}" method="post">
+        <form role="form" action="/members/myPet" th:object="${form}" method="post" enctype="multipart/form-data">
+
+            <div class="form-group">
+                    사진 : <input type="file" th:field="*{photo}">
+            </div>
+
+
 
             <div class="form-group">
                 <label th:for="name">이름</label>
@@ -138,6 +144,7 @@
         </form>
 
     </div>
+</main>
 </main>
 
 </div>
