@@ -2,10 +2,12 @@ package com.momo.controller;
 
 import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
+import com.momo.domain.Item;
 import com.momo.domain.member.*;
 import com.momo.domain.user.User;
 import com.momo.dto.MemberUpdateForm;
 import com.momo.dto.PetForm;
+import com.momo.service.ItemService;
 import com.momo.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +29,21 @@ public class MemberController {
 
     private final MemberService memberService;
 
+<<<<<<< Updated upstream
+=======
+    private final S3Service s3Service;
+
+    private final ItemService itemService;
+
+    /**
+     * String class => LocalDate class 메소드
+     */
+    private LocalDate toLocalDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(date, formatter);
+    }
+
+>>>>>>> Stashed changes
     /**
      * 시터 등록 폼으로 이동
      */
@@ -147,6 +165,16 @@ public class MemberController {
                 .build(), findUser);
 
         return "redirect:/members/myPet";
+    }
+
+    @GetMapping("/members/myItem")
+    public String myList(Model model, @LoginUser SessionUser user) {
+        User findUser = memberService.findOne(user.getEmail());
+        List<Item> items = itemService.findMyItems(user.getEmail());
+
+        model.addAttribute("items", items);
+        model.addAttribute("user", findUser);
+        return "members/myItemForm";
     }
 
     @GetMapping("members/updateMyPet")

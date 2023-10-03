@@ -47,6 +47,7 @@ public class ItemController {
         model.addAttribute("user", user);
         model.addAttribute("privateInformation", findUser.getPrivateInformation());
         log.info("로그인 이름 : " + user.getName());
+
         return "items/createItemForm";
     }
 
@@ -85,14 +86,14 @@ public class ItemController {
     @GetMapping("/items")
     public String list(ItemForm form, Model model) {
 
-        List<Item> items = itemService.searchItems(form);
-
         model.addAttribute("form", new ItemForm());
+
+        List<Item> items = itemService.searchItems(form);
         model.addAttribute("items", items);
         return "items/itemList";
     }
 
-    @GetMapping("/items/{itemId}/edit")
+    @GetMapping("/members/items/{itemId}/edit")
     public String updateItemForm(@PathVariable("itemId") Long itemId, Model model) {
         Item item = itemService.findOne(itemId);
 
@@ -111,7 +112,7 @@ public class ItemController {
         return "items/updateItemForm";
     }
 
-    @PostMapping("/items/{itemId}/edit")
+    @PostMapping("/members/items/{itemId}/edit")
     public String updateItem(@PathVariable Long itemId, @ModelAttribute("form") ItemForm form) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -119,13 +120,13 @@ public class ItemController {
         LocalDateTime endDateTime = LocalDateTime.parse(form.getEndDate(), formatter);
 
         itemService.updateItem(itemId, form.getPrice(), form.getIntroduction(), startDateTime, endDateTime, form.getDog(), form.getCat());
-        return "redirect:/items";
+        return "redirect:/members/myItem";
     }
 
-    @GetMapping("/items/{itemId}/delete")
+    @GetMapping("/members/items/{itemId}/delete")
     public String deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
-        return "redirect:/items";
+        return "redirect:/members/myItem";
     }
 
 

@@ -62,8 +62,10 @@
         $('input[name="daterange"]').daterangepicker(
             {
                 timePicker: true,
+                timePicker24Hour: true,
+                timePickerIncrement: 15,
                 locale: {
-                    format: "YYYY-MM-DD hh:mm",
+                    format: "YYYY-MM-DD HH:mm",
                     separator: " - ",
                     applyLabel: "확인",
                     cancelLabel: "취소",
@@ -90,14 +92,8 @@
                 drops: "down",
             },
             function (start, end) {
-                $('input[name="startDate"]').val(start.format("YYYY-MM-DD hh:mm"));
-                $('input[name="endDate"]').val(end.format("YYYY-MM-DD hh:mm"));
-                console.log(
-                    "A new date selection was made: " +
-                    start.format("YYYY-MM-DD") +
-                    " to " +
-                    end.format("YYYY-MM-DD")
-                );
+                $('input[name="startDate"]').val(start.format("YYYY-MM-DD HH:mm"));
+                $('input[name="endDate"]').val(end.format("YYYY-MM-DD HH:mm"));
             }
         );
     });
