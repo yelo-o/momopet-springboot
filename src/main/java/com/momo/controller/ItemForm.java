@@ -14,4 +14,6 @@ public class ItemForm {
     private String endDate;
     private Boolean dog;
     private Boolean cat;
+    private String si;
+    private String gu;
 }

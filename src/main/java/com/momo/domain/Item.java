@@ -55,4 +55,8 @@ public class Item {
     @Column
     private Boolean cat;
 
+    @Enumerated(EnumType.STRING)
+    private Status status; //활성화, 비활성화
+
+
 }

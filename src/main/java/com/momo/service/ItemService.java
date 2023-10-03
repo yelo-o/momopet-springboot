@@ -1,6 +1,8 @@
 package com.momo.service;
 
+import com.momo.controller.ItemForm;
 import com.momo.domain.Item;
+import com.momo.domain.Status;
 import com.momo.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,8 +34,17 @@ public class ItemService {
         findItem.setCat(cat);
     }
 
+    public void deleteItem(Long itemId) {
+        Item findItem = itemRepository.findOne(itemId);
+        findItem.setStatus(Status.비활성화);
+
+    }
     public List<Item> findItems() {
         return itemRepository.findAll();
+    }
+
+    public List<Item> searchItems(ItemForm form) {
+        return itemRepository.searchItems(form);
     }
 
     public Item findOne(Long itemId) {
