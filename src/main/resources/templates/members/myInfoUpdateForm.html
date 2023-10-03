@@ -34,6 +34,12 @@
             </a>
         </li>
         <li>
+            <a href="/members/myItem" class="nav-link link-dark">
+                <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+                판매 내역
+            </a>
+        </li>
+        <li>
             <a href="/members/myOrder" class="nav-link link-dark">
                 <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
                 주문내역
@@ -71,14 +77,23 @@
                 <input type="text" th:field="${user.name}" class="form-control" readonly>
             </div>
 
+            <!-- 성별에 따른 selected 값 변경 START-->
             <label th:for="gender">성별</label>
-            <div class="form-group">
-                <select class="form-select" th:field="*{gender}" >
-                    <option selected value="">선택</option>
-                    <option th:value="남성">남성</option>
-                    <option th:value="여성">여성</option>
+
+            <div th:unless="${#strings.equals(user.privateInformation.gender, '남성')}" class="form-group" >
+                <select class="form-select" th:field="*{gender}">
+                    <option th:value="여성" selected >여성</option>
+                    <option th:value="남성" >남성</option>
                 </select>
             </div>
+
+            <div th:if="${#strings.equals(user.privateInformation.gender, '남성')}" class="form-group" >
+                <select class="form-select" th:field="*{gender}">
+                    <option th:value="남성" selected >남성</option>
+                    <option th:value="여성" >여성</option>
+                </select>
+            </div>
+            <!-- 성별에 따른 selected 값 변경 END-->
 
             <div class="form-group">
                 <label th:for="email">이메일 (*변경이 불가능합니다.)</label>
@@ -86,19 +101,19 @@
             </div>
 
             <div class="form-group">
-                <label th:for="privateInformation.birthDate">생년월일</label>
+                <label th:for="birthDate">생년월일</label>
                 <input type="text" id="birthDate" name="birthDate" th:value="${user.privateInformation.birthDate}" class="form-control">
             </div>
 
             <div class="form-group">
-                <label th:for="privateInformation.phoneNumber">전화번호</label>
+                <label th:for="phoneNumber">전화번호</label>
                 <input type="text" id="phoneNumber" name="phoneNumber" th:value="${user.privateInformation.phoneNumber}" class="form-control">
             </div>
 
             <hr>
             <h6>주소</h6>
             <div class="form-group">
-                <label th:for="privateInformation.address.si">시</label>
+                <label th:for="si">시</label>
                 <input type="text" id="si" name="si" th:value="${user.privateInformation.address.si}" class="form-control">
             </div>
 

@@ -35,6 +35,12 @@
             </a>
         </li>
         <li>
+            <a href="/members/myItem" class="nav-link link-dark">
+                <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+                판매 내역
+            </a>
+        </li>
+        <li>
             <a href="/members/myOrder" class="nav-link link-dark">
                 <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
                 주문내역
@@ -64,7 +70,13 @@
     <h2>펫 정보</h2>
     <div class="table-responsive">
 
-        <form role="form" action="/members/myPet" th:object="${form}" method="post">
+        <form role="form" action="/members/myPet" th:object="${form}" method="post" enctype="multipart/form-data">
+
+            <div class="form-group">
+                    사진 : <input type="file" th:field="*{photo}">
+            </div>
+
+
 
             <div class="form-group">
                 <label th:for="name">이름</label>
@@ -132,6 +144,7 @@
         </form>
 
     </div>
+</main>
 </main>
 
 </div>

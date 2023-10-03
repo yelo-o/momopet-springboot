@@ -35,6 +35,12 @@
             </a>
         </li>
         <li>
+            <a href="/members/myItem" class="nav-link link-dark">
+                <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+                판매 내역
+            </a>
+        </li>
+        <li>
             <a href="/members/myOrder" class="nav-link link-dark">
                 <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
                 주문내역
@@ -61,33 +67,58 @@
         <h1 class="h2">마이 페이지</h1>
     </div>
 
-    <h2>개인 정보</h2>
+    <h2>펫 정보</h2>
     <div class="table-responsive">
 
-        <form role="form" action="/members/updateMyPet" th:object="${form}" method="post">
+        <form role="form" action="/members/updateMyPet" th:object="${form}" method="post" enctype="multipart/form-data">
 
             <div class="form-group">
-                <label th:for="name">이름</label>
+                <img id="image" th:src="${pet.photo}" height="200">
+                사진 : <input type="file" th:field="*{photo}">
+            </div>
+
+            <div class="form-group">
+                <label th:for="pet.name">이름</label>
                 <input type="text" id="name" name="name" th:value="${pet.name}" class="form-control">
             </div>
 
+
+            <!-- 성별에 따른 selected 값 변경 START-->
             <label th:for="gender">성별</label>
-            <div class="form-group">
-                <select class="form-select" id="gender" name="gender" th:value="${pet.gender}">
-                    <option selected value="">선택</option>
-                    <option th:value="남성">수컷</option>
-                    <option th:value="여성">암컷</option>
+
+            <div th:unless="${#strings.equals(pet.gender, '남성')}" class="form-group" >
+                <select class="form-select" th:field="*{gender}">
+                    <option th:value="여성" selected >암컷</option>
+                    <option th:value="남성" >수컷</option>
                 </select>
             </div>
 
-            <label th:for="petType">종류</label>
-            <div class="form-group">
-                <select class="form-select" id="petType" name="petType" th:value="${pet.petType}">
-                    <option selected value="">선택</option>
-                    <option th:value="고양이">고양이</option>
-                    <option th:value="개">개</option>
+            <div th:if="${#strings.equals(pet.gender, '남성')}" class="form-group" >
+                <select class="form-select" th:field="*{gender}">
+                    <option th:value="남성" selected >수컷</option>
+                    <option th:value="여성" >암컷</option>
                 </select>
             </div>
+            <!-- 성별에 따른 selected 값 변경 END-->
+
+
+            <!-- 펫 종류에 따른 selected 값 변경 START-->
+            <label th:for="petType">종류</label>
+
+            <div th:unless="${#strings.equals(pet.petType, '개')}" class="form-group" >
+                <select class="form-select" th:field="*{petType}">
+                    <option th:value="고양이" selected >고양이</option>
+                    <option th:value="개" >개</option>
+                </select>
+            </div>
+
+            <div th:if="${#strings.equals(pet.petType, '개')}" class="form-group" >
+                <select class="form-select" th:field="*{petType}">
+                    <option th:value="개" selected >개</option>
+                    <option th:value="고양이" >고양이</option>
+                </select>
+            </div>
+            <!-- 펫 종류에 따른 selected 값 변경 END-->
 
             <div class="form-group">
                 <label th:for="breed">품종</label>
@@ -101,13 +132,11 @@
 
             <div class="form-group">
                 <label th:for="remark">주의사항</label>
-                <input type="text" id="remark" name="remark" th:field="${pet.remark}" class="form-control">
+                <input type="text" id="remark" name="remark" th:value="${pet.remark}" class="form-control">
             </div>
 
             <hr>
-<!-- 초록색 버튼 -->
-<!--            <button type="submit" class="btn btn-primary">수정</button>-->
-<!-- 검은색 버튼 -->
+
             <div class="btn-group me-2">
                 <button type="submit" class="btn btn-sm btn-outline-secondary">수정 완료</button>
             </div>

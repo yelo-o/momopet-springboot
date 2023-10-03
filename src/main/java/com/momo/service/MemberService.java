@@ -64,10 +64,9 @@ public class MemberService {
     }
 
     public void updatePet(String name, Gender gender, PetType petType, String breed,
-                          LocalDate birthDate, String remark, Pet pet) {
-        pet.update(name, gender, petType, breed, birthDate, remark);
+                          LocalDate birthDate, String remark, Pet pet, String photo) {
 
-
+        pet.update(name, gender, petType, breed, birthDate, remark, photo);
     }
 
     //펫 정보 불러오기
@@ -81,9 +80,9 @@ public class MemberService {
     }
 
     //펫 추가
-    public void add(Pet pet, User findUser) {
+    public void add(Pet pet) {
         memberRepository.save(pet);
-        findUser.upgrade(); //SITTER => OWNER 업그레이드
+//        findUser.upgrade(); //SITTER => OWNER 업그레이드
     }
 
 }
