@@ -43,6 +43,10 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
+    public List<Item> findMyItems(String email) {
+        return itemRepository.findMyItems(email);
+    }
+
     public List<Item> searchItems(ItemForm form) {
         return itemRepository.searchItems(form);
     }

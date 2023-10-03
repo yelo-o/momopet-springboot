@@ -58,7 +58,7 @@
     <table class="table table-striped table-sm text-center">
     <thead> <tr>
         <th>프로필사진</th> <th>일급</th> <th>자기소개</th> <th>돌봄가능펫</th> <th>주소</th>
-        <th>가능시작날짜</th> <th>가능마지막날짜</th> <th></th> <th></th>
+        <th>가능시작날짜</th> <th>가능마지막날짜</th> <th></th>
     </tr>
     </thead>
         <tbody>
@@ -72,13 +72,10 @@
             <td th:text="${item.introduction}"></td>
             <td> <span th:if="${item.dog}">개</span> <span th:if="${item.cat}">고양이</span></td>
             <td> <span th:text="${item.si}"></span> <span th:text="${item.gu}"></span></td>
-            <td th:text="${#temporals.format(item.startDate, 'yyyy-MM-dd hh:mm')}"></td>
-            <td th:text="${#temporals.format(item.endDate, 'yyyy-MM-dd hh:mm')}"></td>
+            <td th:text="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"></td>
             <td>
-                <a th:href="@{items/{id}/edit (id=${item.id})}" class="btn btn-primary" role="button">수정</a>
-            </td>
-            <td>
-                <a th:href="@{items/{id}/delete (id=${item.id})}" class="btn btn-primary" role="button">삭제</a>
+                <a th:href="@{items/{id}/edit (id=${item.id})}" class="btn btn-primary" role="button">돌봄 요청하기</a>
             </td>
         </tr>
         </tbody>
@@ -92,8 +89,10 @@
             {
                 opens: 'right',
                 timePicker: true,
+                timePicker24Hour: true,
+                timePickerIncrement: 15,
                 locale: {
-                    format: "YYYY-MM-DD hh:mm",
+                    format: "YYYY-MM-DD HH:mm",
                     separator: " - ",
                     applyLabel: "확인",
                     cancelLabel: "취소",
@@ -120,14 +119,8 @@
                 drops: "below",
             },
             function (start, end) {
-                $('input[name="startDate"]').val(start.format("YYYY-MM-DD hh:mm"));
-                $('input[name="endDate"]').val(end.format("YYYY-MM-DD hh:mm"));
-                console.log(
-                    "A new date selection was made: " +
-                    start.format("YYYY-MM-DD") +
-                    " to " +
-                    end.format("YYYY-MM-DD")
-                );
+                $('input[name="startDate"]').val(start.format("YYYY-MM-DD HH:mm"));
+                $('input[name="endDate"]').val(end.format("YYYY-MM-DD HH:mm"));
             }
         );
     });

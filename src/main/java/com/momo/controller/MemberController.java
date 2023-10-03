@@ -2,10 +2,12 @@ package com.momo.controller;
 
 import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
+import com.momo.domain.Item;
 import com.momo.domain.member.*;
 import com.momo.domain.user.User;
 import com.momo.dto.MemberUpdateForm;
 import com.momo.dto.PetForm;
+import com.momo.service.ItemService;
 import com.momo.service.MemberService;
 import com.momo.service.S3Service;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,7 +32,10 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    private final ItemService itemService;
+
     private final S3Service s3Service;
+
 
     /**
      * String class => LocalDate class 메소드
@@ -38,6 +44,7 @@ public class MemberController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(date, formatter);
     }
+
 
     /**
      * 시터 등록 폼으로 이동
@@ -154,6 +161,16 @@ public class MemberController {
         findUser.upgrade(); //SITTER => OWNER 업그레이드
 
         return "redirect:/members/myPet";
+    }
+
+    @GetMapping("/members/myItem")
+    public String myList(Model model, @LoginUser SessionUser user) {
+        User findUser = memberService.findOne(user.getEmail());
+        List<Item> items = itemService.findMyItems(user.getEmail());
+
+        model.addAttribute("items", items);
+        model.addAttribute("user", findUser);
+        return "members/myItemForm";
     }
 
     @GetMapping("members/updateMyPet")
