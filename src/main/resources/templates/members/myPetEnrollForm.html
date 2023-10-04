@@ -72,10 +72,14 @@
 
         <form role="form" action="/members/myPet" th:object="${form}" method="post" enctype="multipart/form-data">
 
-            <div class="form-group">
-                    사진 : <input type="file" th:field="*{photo}">
-            </div>
 
+            <div class="col-sm-3">
+                <label class="form-label" th:for="photo">사진</label>
+                <input type="file" class="form-control" id="customFile" style="height: 37px"
+                       th:field="*{photo}" th:class="${#fields.hasErrors('photo')}? 'form-control fieldError' : 'form-control'">
+                <p th:if="${#fields.hasErrors('photo')}"
+                   th:errors="*{photo}">Incorrect date</p>
+            </div>
 
 
             <div class="form-group">
@@ -152,4 +156,12 @@
 <div th:replace="fragments/footer :: footer" />
 </div> <!-- /container -->
 </body>
+
+<script>
+    // $(()=>{
+    //     const petEnrollBtn = $('#btn btn-sm btn-outline-secondary');
+    //
+    // })
+</script>
+
 </html>

@@ -25,13 +25,6 @@ public class PrivateInformation {
     }
 
     //값 타입은 기본적으로 변경이 불가능하게 설계되어야 한다. -> 생성할 때만 값이 셋팅이 되고 setter는 제공하지 말아야 한다.
-//    public PrivateInformation(String email, LocalDateTime birthDate, Gender gender, Address address, String phoneNumber) {
-//        this.birthDate = birthDate;
-//        this.gender = gender;
-//        this.address = address;
-//        this.phoneNumber = phoneNumber;
-//    }
-
     public PrivateInformation(LocalDate birthDate, Address address, String phoneNumber, Gender gender) {
         this.birthDate = birthDate;
         this.address = address;

@@ -4,6 +4,7 @@ import com.momo.domain.BaseTimeEntity;
 import com.momo.domain.Board;
 import com.momo.domain.Item;
 import com.momo.domain.member.Pet;
+import com.momo.domain.member.Point;
 import com.momo.domain.member.PrivateInformation;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,12 +47,17 @@ public class User extends BaseTimeEntity  {
     private List<Board> boards = new ArrayList<>();
 
 
-    //=멤버 변수=//
     @Embedded
     private PrivateInformation privateInformation;
 
     @OneToMany(mappedBy = "sitter")
     private List<Item> items = new ArrayList<>();
+
+    @Column
+    private int balance; //잔액
+
+    @OneToMany(mappedBy = "user")
+    private List<Point> points = new ArrayList<>();
   
     @Builder
     public User(String name, String email, String picture, Role role, PrivateInformation privateInformation) {
