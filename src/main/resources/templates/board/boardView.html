@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <head th:replace="fragments/header :: header"/>
     <meta charset="UTF-8">
     <title>게시글 상세 페이지</title>
+    <script src=" http://code.jquery.com/jquery-3.6.3.min.js"></script>
 </head>
+<!-- 자바스크립트에 타임리프표현식 전달하는 방법 -->
+
+
+
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeader"/>
-
-
 
 <div class="layout" th:object="${form}">
     <form action="/board/write" method="post">
         <div class="container">
             <div class="form-group">
+                <br>
+                <p>조회수: <span th:text="${board.views}">0</span></p>
                 <label th:for="board.title">제목</label>
                 <input type="text" th:field="${board.title}" class="form-control" readonly>
                 <label th:for="board.content">내용</label>
@@ -24,13 +30,52 @@
                     <a class="btn btn-primary" th:href="@{/board/modify/{id}(id = ${board.id})}">수정</a>
                 </div>
             </div>
+
+
+
+
+
             <div th:replace="fragments/footer :: footer"/>
         </div>
     </form>
+
+    <div>
+        <input type="text" id="commentWriter" placeholder="작성자">
+        <input type="text" id="commentContents" placeholder="내용">
+        <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
+    </div>
+
+
+
+    <script  th:inline="javascript">
+        const boardId = [[${board.id}]];
+        const commentWrite = () => {
+            const writer = document.getElementById("commentWriter").value;
+            const contents = document.getElementById("commentContents").value;
+
+            $.ajax({
+                type: "post",
+                url: "/comment/save",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    commentWriter: writer,
+                    commentContents: contents,
+                    board_id: boardId
+                }),
+                dataType: "json",
+                success: function(commentList) {
+                    console.log("작성 성공");
+                    // 성공 시 댓글 목록을 업데이트하거나 필요한 작업을 수행할 수 있음
+                },
+                error: function(){
+                    console.log("실패");
+                }
+            });
+        }
+
+
+    </script>
 </div>
-
-
-
 </body>
 </html>
 

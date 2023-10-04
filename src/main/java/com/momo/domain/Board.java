@@ -2,12 +2,11 @@ package com.momo.domain;
 
 
 import com.momo.domain.user.User;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -15,7 +14,7 @@ public class Board extends BaseTimeEntity{
 
     @Id @GeneratedValue
     @Column(name = "board_id")
-    private Integer id;
+    private Long id;
 
     private String title;
     private String content;
@@ -32,5 +31,16 @@ public class Board extends BaseTimeEntity{
     //private LocalDateTime postingDate;
 
     private int view; //조회수
+
+
+
+    // 게시글과 댓글을 양방향 관계 설정
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setBoard(this);
+    }
 
 }

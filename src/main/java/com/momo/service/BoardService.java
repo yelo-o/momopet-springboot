@@ -1,11 +1,9 @@
 package com.momo.service;
 
-import com.momo.controller.BoardForm;
 import com.momo.domain.Board;
 import com.momo.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
@@ -26,13 +24,17 @@ public class BoardService {
     }
 
     //특정 게시글 불러오기
-    public Board boardView(Integer id){
+    public Board boardView(Long id){
         return boardRepository.findById(id).get();
     }
 
     //게시글 삭제
-    public void boardDelete(Integer id) {
+    public void boardDelete(Long id) {
         boardRepository.deleteById(id);
+    }
+
+    public Board findById(Long boardId) {
+        return boardRepository.findById(boardId).orElse(null);
     }
 
 

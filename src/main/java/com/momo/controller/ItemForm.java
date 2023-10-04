@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter @Setter
 public class ItemForm {
-    private Integer price;
+    private int price;
     private String introduction;
     private String startDate;
     private String endDate;
