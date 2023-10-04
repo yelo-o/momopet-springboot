@@ -14,7 +14,7 @@
 <body>
 <div th:replace="fragments/bodyHeader :: bodyHeader"/>
 
-<div class="layout" th:object="${form}">
+<div class="layout" th:object="${board}">
     <form action="/board/write" method="post">
         <div class="container">
             <div class="form-group">
@@ -22,6 +22,14 @@
                 <p>조회수: <span th:text="${board.views}">0</span></p>
                 <label th:for="board.title">제목</label>
                 <input type="text" th:field="${board.title}" class="form-control" readonly>
+
+                <div class="form-group text-center">
+                    <label th:for="name">사진</label>
+                    <div style="max-width: 400px; margin: 0 auto;">
+                        <img id="image" th:src="*{photo}" height="400">
+                    </div>
+                </div>
+
                 <label th:for="board.content">내용</label>
                 <textarea type="text" th:field="${board.content}" class="form-control" rows="15" readonly></textarea>
                 <div class="text-center"><br>
