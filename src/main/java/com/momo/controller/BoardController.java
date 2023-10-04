@@ -9,7 +9,6 @@ import com.momo.service.BoardService;
 import com.momo.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -79,13 +78,13 @@ public class BoardController {
     }
 
     @GetMapping ("/board/view") //localhost:9090/board/view?id=1
-    public String boardView(Model model, Integer id) {
+    public String boardView(Model model, Long id) {
         model.addAttribute("board", boardService.boardView(id));
         return "board/boardView";
     }
 
     @GetMapping("/board/delete")
-    public String boardDelete(Integer id, Model model) {
+    public String boardDelete(Long id, Model model) {
         boardService.boardDelete(id);
 
         model.addAttribute("message", "글이 삭제되었습니다.");
@@ -95,7 +94,7 @@ public class BoardController {
     }
 
     @GetMapping("/board/modify/{id}")
-    public String boardModify(@PathVariable("id") Integer id, Model model){
+    public String boardModify(@PathVariable("id") Long id, Model model){
 
         model.addAttribute("board", boardService.boardView(id));
 
@@ -103,7 +102,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/update/{id}")
-    public String boardUpdate(@PathVariable("id") Integer id, Board board, Model model) {
+    public String boardUpdate(@PathVariable("id") Long id, Board board, Model model) {
 
         Board boardTemp = boardService.boardView(id);
         boardTemp.setTitle(board.getTitle());
@@ -120,7 +119,7 @@ public class BoardController {
 
     //조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가
     @GetMapping("/board/{id}")
-    public String getBoard(@PathVariable Integer id, Model model) {
+    public String getBoard(@PathVariable Long id, Model model) {
         Optional<Board> optionalboard = boardRepository.findById(id);
         if(optionalboard.isPresent()) {
             Board board = optionalboard.get();
@@ -130,5 +129,7 @@ public class BoardController {
         }
         return "board/boardView";
     }
+
+
 
 }
