@@ -24,26 +24,8 @@
         <div class="card-body">
             <div class="table-responsive">
                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <div class="dataTables_length" id="dataTable_length"><label>Show <select
-                                    name="dataTable_length" aria-controls="dataTable"
-                                    class="custom-select custom-select-sm form-control form-control-sm">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select> entries</label></div>
-                        </div>
-                        <div class="col-sm-12 col-md-6">
-                            <div id="dataTable_filter" class="dataTables_filter"><label>Search:<input type="search"
-                                                                                                      class="form-control form-control-sm"
-                                                                                                      placeholder=""
-                                                                                                      aria-controls="dataTable"></label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
+
+<!--                    <div class="row">
                         <div class="col-sm-12">
                             <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0"
                                    role="grid" aria-describedby="dataTable_info" style="width: 100%;">
@@ -82,13 +64,38 @@
                                     <td th:text="${board.name}">조용훈</td>
                                     <td th:text="${board.getCreatedDate()}">2008/11/28</td>
                                     <td th:text="${board.views}">조회수</td>
+                                    <td>
+                                        <img id="image" th:src="*{board.photo}" height="100" width="100">
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
+                    </div>-->
+
+
+                    <div class="album py-5 bg-body-tertiary">
+                        <div class="container">
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                                <div class="col" th:each="board : ${list}">
+                                    <div class="card shadow-sm">
+                                        <img th:src="*{board.photo}" width="100%" height="225" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                            <title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect></img>
+                                        <div class="card-body"><br>
+                                            <div class="text-center">
+                                                <div> <a th:text="${board.title}" th:href="@{/board/{id}(id=${board.id})}" style="font-weight: bold; font-size: 1.3em;">제목</a></div>
+                                            </div><br>
+                                            <div class="d-flex justify-content-between">
+                                                <div>작성자: <div th:text="${board.name}">조용훈</div></div>
+                                                <div>작성시간: <div th:text="${board.getCreatedDate()}">2008/11/28</div></div>
+                                                <div>조회수: <div th:text="${board.views}">조회수</div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-
                 </div>
             </div>
         </div>

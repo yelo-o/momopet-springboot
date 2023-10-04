@@ -4,6 +4,8 @@ package com.momo.domain;
 import com.momo.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ public class Board extends BaseTimeEntity{
 
     private int view; //조회수
 
+    private String photo;
 
 
     // 게시글과 댓글을 양방향 관계 설정

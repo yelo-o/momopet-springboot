@@ -7,6 +7,7 @@ import com.momo.domain.user.User;
 import com.momo.repository.BoardRepository;
 import com.momo.service.BoardService;
 import com.momo.service.MemberService;
+import com.momo.service.S3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -26,11 +28,17 @@ public class BoardController {
     @Autowired
     private MemberService memberService;
 
-    private final BoardRepository boardRepository;
     @Autowired
-    public BoardController(BoardRepository boardRepository){
+    private final S3Service s3Service;
+
+    @Autowired
+    private final BoardRepository boardRepository;
+
+    public BoardController(S3Service s3Service, BoardRepository boardRepository) {
+        this.s3Service = s3Service;
         this.boardRepository = boardRepository;
     }
+
 
     @GetMapping("/board/write")     //localhost:9090/board/write
     public String boardWriteForm(Model model){
@@ -40,7 +48,7 @@ public class BoardController {
 
     @PostMapping("/board/write")
     public  String boardWritePro(@ModelAttribute("form") @Valid BoardForm form, BindingResult bindingResult,
-                                 Model model, @LoginUser SessionUser user) {
+                                 Model model, @LoginUser SessionUser user) throws IOException {
 
         if(bindingResult.hasErrors()) {
             return "board/boardWrite";
@@ -57,6 +65,12 @@ public class BoardController {
         board.setName(findUser.getName());
 
         //log.info("제목 가져오기" + form.getTitle());
+
+        if (form.getPhoto()!=null) {
+            //사진 url 받기
+            String photo = s3Service.uploadFile(form.getPhoto());
+            board.setPhoto(photo);
+        }
 
         boardService.write(board);
 
@@ -120,9 +134,9 @@ public class BoardController {
     //조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가
     @GetMapping("/board/{id}")
     public String getBoard(@PathVariable Long id, Model model) {
-        Optional<Board> optionalboard = boardRepository.findById(id);
-        if(optionalboard.isPresent()) {
-            Board board = optionalboard.get();
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        if(optionalBoard.isPresent()) {
+            Board board = optionalBoard.get();
             board.setViews(board.getViews() + 1);   //조회수 증가
             boardRepository.save(board);            //변경된 조회수를 저장
             model.addAttribute("board", board);
