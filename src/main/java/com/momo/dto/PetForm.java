@@ -1,10 +1,13 @@
 package com.momo.dto;
 
+import com.momo.validation.ImageFileArgumentNotValidation;
+import com.momo.validation.ValidFile;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter @Setter
 public class PetForm {
@@ -27,7 +30,15 @@ public class PetForm {
     @NotEmpty(message = "주의사항을 입력해주세요.")
     private String remark; //주의사항
 
-//    @NotEmpty(message = "사진을 업로드해주세요.")
+    @ValidFile(message = "이미지 파일 첨부는 필수입니다.")
     private MultipartFile photo; //사진
+
+
+
+    public void validate() throws ImageFileArgumentNotValidation {
+        if(photo.isEmpty()){
+            throw new ImageFileArgumentNotValidation("image","이미지 파일은 필수입니다.");
+        }
+    }
 
 }
