@@ -18,7 +18,7 @@ import static com.momo.domain.user.Role.USER;
 
 @Getter @Setter
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users") //H2 데이터베이스에서 "user"가 예약어로 지정되어 있어서 "users"로 변경
 @Entity
 public class User extends BaseTimeEntity  {
 
