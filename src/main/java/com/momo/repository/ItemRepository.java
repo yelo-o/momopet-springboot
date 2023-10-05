@@ -3,16 +3,14 @@ package com.momo.repository;
 import com.momo.controller.ItemForm;
 import com.momo.domain.Item;
 import com.momo.domain.Status;
+import com.momo.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -62,7 +60,8 @@ public class ItemRepository {
         CriteriaQuery<Item> cq = cb.createQuery(Item.class);
 
         Root<Item> i = cq.from(Item.class);
-        Predicate emailEqual = cb.equal(i.get("email"), email);
+
+        Predicate emailEqual = cb.equal(i.get("sitter").get("email"), email);
         Predicate statusEqual = cb.equal(i.get("status"), Status.활성화);
 
         javax.persistence.criteria.Order dateAsc = cb.asc(i.get("startDate"));
@@ -76,7 +75,7 @@ public class ItemRepository {
         return items;
     }
 
-    public List<Item> searchItems(ItemForm form) {
+    public List<Item> searchItems(ItemForm form, String email) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -85,19 +84,23 @@ public class ItemRepository {
         //Criteria 생성, 반환 타입 지정
         CriteriaQuery<Item> cq = cb.createQuery(Item.class);
 
-        //FROM 절 생성. 반환된 값 i는 Criteria에서 사용하는 특별한 별칭이다. i를 조회의 시작점이라는 의미로 쿼리 루트(Root)라 한다.
+        //FROM 절 생성. 반환된 값 i는 Criteria에서 사용하는 별칭이다. i를 조회의 시작점이라는 의미로 쿼리 루트(Root)라 한다.
         Root<Item> i = cq.from(Item.class);
+/*        Join<Item, User> u = i.join("sitter");*/
 
         //검색 조건 리스트 생성
         List<Predicate> criteria = new ArrayList<Predicate>();
 
         //검색 조건 리스트에 하나씩 추가
-        criteria.add(cb.equal(i.get("status"), Status.활성화));
+        criteria.add(cb.equal(i.get("status"), Status.활성화)); //삭제되지 않은 아이템만 조회
+        criteria.add(cb.notEqual(i.get("sitter").get("email"), email)); //본인이 올린 아이템은 조회 리스트에서 제외
 
-        if (form.getSi() != null) criteria.add(cb.equal(i.get("si"),
+        if (form.getSi() != null)
+            criteria.add(cb.like(i.get("sitter").get("privateInformation").get("address").get("si"),
                 cb.parameter(String.class, "si")));
-        if (form.getGu() != null) criteria.add(cb.equal(i.get("gu"),
-                cb.parameter(String.class, "gu")));
+        if (form.getGu() != null)
+            criteria.add(cb.like(i.get("sitter").get("privateInformation").get("address").get("gu"),
+                    cb.parameter(String.class, "gu")));
         if (form.getPrice() != null) criteria.add(cb.lessThanOrEqualTo(i.get("price"),
                 cb.parameter(Integer.class, "price")));
         /*if (form.getDog() != null || Boolean.TRUE.equals(form.getDog())) criteria.add(cb.equal(i.get("dog"),*/
@@ -118,8 +121,8 @@ public class ItemRepository {
                 .orderBy(dateAsc);
 
         TypedQuery<Item> query = em.createQuery(cq);
-        if (form.getSi() != null) query.setParameter("si", form.getSi());
-        if (form.getGu() != null) query.setParameter("gu", form.getGu());
+        if (form.getSi() != null) query.setParameter("si", form.getSi() + "%");
+        if (form.getGu() != null) query.setParameter("gu", form.getGu() + "%");
         if (form.getPrice() != null) query.setParameter("price", form.getPrice());
         if (Boolean.TRUE.equals(form.getDog())) query.setParameter("dog", form.getDog());
         if (Boolean.TRUE.equals(form.getCat())) query.setParameter("cat", form.getCat());

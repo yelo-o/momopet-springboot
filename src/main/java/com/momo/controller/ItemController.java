@@ -14,9 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -54,16 +56,16 @@ public class ItemController {
     @PostMapping("/items/new")
     public String create(ItemForm form, @LoginUser SessionUser user) {
 
+/*        //createItemForm에 오류가 있는지 확인 (Validation)
+        if (result.hasErrors()) {
+            return "items/createItemForm";
+        }*/
+
         Item item = new Item();
 
         User findUser = memberService.findOne(user.getEmail());
 
         item.setSitter(findUser);
-        item.setName(findUser.getName());
-        item.setEmail(findUser.getEmail());
-        item.setPicture(findUser.getPicture());
-        item.setSi(findUser.getPrivateInformation().getAddress().getSi());
-        item.setGu(findUser.getPrivateInformation().getAddress().getGu());
 
         item.setPrice(form.getPrice());
         item.setIntroduction(form.getIntroduction());
@@ -84,11 +86,11 @@ public class ItemController {
     }
 
     @GetMapping("/items")
-    public String list(ItemForm form, Model model) {
+    public String list(ItemForm form, Model model, @LoginUser SessionUser user) {
 
         model.addAttribute("form", new ItemForm());
 
-        List<Item> items = itemService.searchItems(form);
+        List<Item> items = itemService.searchItems(form, user.getEmail());
         model.addAttribute("items", items);
         return "items/itemList";
     }
