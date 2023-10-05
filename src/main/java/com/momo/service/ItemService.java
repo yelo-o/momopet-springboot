@@ -47,8 +47,8 @@ public class ItemService {
         return itemRepository.findMyItems(email);
     }
 
-    public List<Item> searchItems(ItemForm form) {
-        return itemRepository.searchItems(form);
+    public List<Item> searchItems(ItemForm form, String email) {
+        return itemRepository.searchItems(form, email);
     }
 
     public Item findOne(Long itemId) {

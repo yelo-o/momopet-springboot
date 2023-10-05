@@ -65,13 +65,13 @@
         <tr th:each="item : ${items}">
             <td>
             <div>
-                <img th:src="${item.picture}" alt="" class="rounded-circle mx-auto d-block">
+                <img th:src="${item.sitter.picture}" alt="" class="rounded-circle mx-auto d-block">
             </div>
             </td>
             <td th:text="${item.price}"></td>
             <td th:text="${item.introduction}"></td>
             <td> <span th:if="${item.dog}">개</span> <span th:if="${item.cat}">고양이</span></td>
-            <td> <span th:text="${item.si}"></span> <span th:text="${item.gu}"></span></td>
+            <td> <span th:text="${item.sitter.privateInformation.address.si}"></span> <span th:text="${item.sitter.privateInformation.address.gu}"></span></td>
             <td th:text="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"></td>
             <td>
