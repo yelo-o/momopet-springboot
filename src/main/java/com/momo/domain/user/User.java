@@ -54,7 +54,7 @@ public class User extends BaseTimeEntity  {
     private List<Item> items = new ArrayList<>();
 
     @Column
-    private int balance; //잔액
+    private int point; //잔액
 
     @OneToMany(mappedBy = "user")
     private List<Point> points = new ArrayList<>();
@@ -110,6 +110,12 @@ public class User extends BaseTimeEntity  {
 
     public String getRoleKey() {
         return this.role.getKey();
+    }
+
+    // 충전 금액 증가 메소드
+    public User pointUp(int point) {
+        this.point += point;
+        return this;
     }
 
 }
