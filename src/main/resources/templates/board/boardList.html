@@ -17,7 +17,7 @@
     <p class="mb-4">※내 펫을 자랑해봐요※</p>
 
     <!-- DataTales Example -->
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4" >
         <div class="card-header py-3">
             <a href="/board/write" class="btn btn-primary text-white">글쓰기</a>
         </div>
@@ -93,6 +93,26 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="pagination justify-content-center">
+                                <ul class="pagination">
+                                    <li class="page-item" th:classappend="${nowPage <= startPage} ? 'disabled' : ''">
+                                        <a class="page-link" th:if="${nowPage > startPage}" th:href="@{/board/list(page=${nowPage - 2})}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                                        <li class="page-item" th:classappend="${page == nowPage} ? 'active' : ''">
+                                            <a class="page-link" th:if="${page != nowPage}" th:href="@{/board/list(page=${page - 1})}" th:text="${page}"></a>
+                                            <strong th:if="${page == nowPage}" class="page-link" th:text="${page}" style="color: red"></strong>
+                                        </li>
+                                    </th:block>
+                                    <li class="page-item" th:classappend="${nowPage + 1 > list.totalPages || nowPage >= endPage} ? 'disabled' : ''">
+                                        <a class="page-link" th:if="${nowPage + 1 <= list.totalPages}" th:href="@{/board/list(page=${nowPage})}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
