@@ -10,6 +10,10 @@ import com.momo.service.MemberService;
 import com.momo.service.S3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -83,10 +87,20 @@ public class BoardController {
         return "board/message";
     }
 
+    //게시글리스트 불러오기 + 페이징처리
     @GetMapping("/board/list")
-    public String boardList(Model model){
+    public String boardList(Model model, @PageableDefault(page = 0, size = 6, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
 
-        model.addAttribute("list", boardService.boardList());
+        Page<Board> list = boardService.boardList(pageable);
+
+        int nowPage = list.getPageable().getPageNumber() + 1;      //0부터 시작이기때문에 1을 더해줘야 1부터 시작되게 된다.
+        int startPage = Math.max(nowPage - 4, 1);   //1보다 작게 나오면 1이 나오게 한다.
+        int endPage= Math.min(nowPage + 5, list.getTotalPages());
+
+        model.addAttribute("list", list);
+        model.addAttribute("nowPage",nowPage);
+        model.addAttribute("startPage",startPage);
+        model.addAttribute("endPage",endPage);
 
         return "board/boardList";
     }
@@ -143,7 +157,5 @@ public class BoardController {
         }
         return "board/boardView";
     }
-
-
 
 }
