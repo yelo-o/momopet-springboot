@@ -25,7 +25,7 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     private LocalDateTime orderDate; //주문 date
@@ -37,6 +37,23 @@ public class Order {
 
     @OneToOne(mappedBy = "order")
     private Review review;
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+/*    public static Order createOrder(User user, int day, OrderItem... orderItems) {
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderDate(LocalDateTime.now());
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.PENDING);
+        return order;
+    }*/
+
 
     /**
      * 전체 주문 가격 조회

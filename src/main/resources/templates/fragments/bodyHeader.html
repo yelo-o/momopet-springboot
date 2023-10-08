@@ -13,9 +13,9 @@
             <div th:unless="${#authorization.expr('isAuthenticated()')}" class="collapse navbar-collapse" >
 
                 <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-                    <li class="nav-item active">
+<!--                    <li class="nav-item active">
                         <a class="nav-link" href="#">Home</a>
-                    </li>
+                    </li>-->
                     <li><a class="nav-link" href="#">돌보미 찾기</a></li>
 <!--                    <li><a class="nav-link" href="#">돌보미가 되어보기</a></li>-->
                     <li><a class="nav-link" th:href="@{~/board/list}">자랑하기</a></li>
@@ -34,9 +34,9 @@
             <!--로그인 O-->
             <div th:if="${#authorization.expr('isAuthenticated()')}" class="collapse navbar-collapse" >
                 <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-                    <li class="nav-item active">
+<!--                    <li class="nav-item active">
                         <a class="nav-link" href="#">Home</a>
-                    </li>
+                    </li>-->
                     <li><a class="nav-link" th:href="@{~/items}">돌보미 찾기</a></li>
                     <li><a class="nav-link" th:href="@{~/items/new}">돌보미가 되어보기</a></li>
                     <li><a class="nav-link" th:href="@{~/board/list}">자랑하기</a></li>
