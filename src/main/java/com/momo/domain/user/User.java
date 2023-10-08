@@ -3,6 +3,7 @@ package com.momo.domain.user;
 import com.momo.domain.BaseTimeEntity;
 import com.momo.domain.Board;
 import com.momo.domain.Item;
+import com.momo.domain.Order;
 import com.momo.domain.member.Pet;
 import com.momo.domain.member.Point;
 import com.momo.domain.member.PrivateInformation;
@@ -52,6 +53,9 @@ public class User extends BaseTimeEntity  {
 
     @OneToMany(mappedBy = "sitter")
     private List<Item> items = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders = new ArrayList<>();
 
     @Column
     private int point; //잔액

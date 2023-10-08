@@ -3,12 +3,14 @@ package com.momo.controller;
 import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.Item;
+import com.momo.domain.Order;
 import com.momo.domain.member.*;
 import com.momo.domain.user.User;
 import com.momo.dto.MemberUpdateForm;
 import com.momo.dto.PetForm;
 import com.momo.service.ItemService;
 import com.momo.service.MemberService;
+import com.momo.service.OrderService;
 import com.momo.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,8 @@ public class MemberController {
     private final MemberService memberService;
 
     private final ItemService itemService;
+
+    private final OrderService orderService;
 
     private final S3Service s3Service;
 
@@ -172,6 +176,18 @@ public class MemberController {
         model.addAttribute("items", items);
         model.addAttribute("user", findUser);
         return "members/myItemForm";
+    }
+
+    @GetMapping("/members/myOrder")
+    public String myOrderList(Model model, @LoginUser SessionUser user) {
+        User findUser = memberService.findOne(user.getEmail());
+        List<Order> orders = orderService.findMyOrders(user.getEmail()); //내가 주문한 내역
+        List<Order> sittingOrders = orderService.findSittingOrders(user.getEmail()); //내가 받은 주문 내역
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("sittingOrders", sittingOrders);
+        model.addAttribute("user", findUser);
+        return "members/myOrderForm";
     }
 
     @GetMapping("members/updateMyPet")
