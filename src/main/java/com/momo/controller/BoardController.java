@@ -7,15 +7,20 @@ import com.momo.domain.user.User;
 import com.momo.repository.BoardRepository;
 import com.momo.service.BoardService;
 import com.momo.service.MemberService;
+import com.momo.service.S3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Optional;
 
 @Controller
@@ -27,11 +32,17 @@ public class BoardController {
     @Autowired
     private MemberService memberService;
 
-    private final BoardRepository boardRepository;
     @Autowired
-    public BoardController(BoardRepository boardRepository){
+    private final S3Service s3Service;
+
+    @Autowired
+    private final BoardRepository boardRepository;
+
+    public BoardController(S3Service s3Service, BoardRepository boardRepository) {
+        this.s3Service = s3Service;
         this.boardRepository = boardRepository;
     }
+
 
     @GetMapping("/board/write")     //localhost:9090/board/write
     public String boardWriteForm(Model model){
@@ -41,7 +52,7 @@ public class BoardController {
 
     @PostMapping("/board/write")
     public  String boardWritePro(@ModelAttribute("form") @Valid BoardForm form, BindingResult bindingResult,
-                                 Model model, @LoginUser SessionUser user) {
+                                 Model model, @LoginUser SessionUser user) throws IOException {
 
         if(bindingResult.hasErrors()) {
             return "board/boardWrite";
@@ -59,6 +70,12 @@ public class BoardController {
 
         //log.info("제목 가져오기" + form.getTitle());
 
+        if (form.getPhoto()!=null) {
+            //사진 url 받기
+            String photo = s3Service.uploadFile(form.getPhoto());
+            board.setPhoto(photo);
+        }
+
         boardService.write(board);
 
 
@@ -70,22 +87,32 @@ public class BoardController {
         return "board/message";
     }
 
+    //게시글리스트 불러오기 + 페이징처리
     @GetMapping("/board/list")
-    public String boardList(Model model){
+    public String boardList(Model model, @PageableDefault(page = 0, size = 6, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
 
-        model.addAttribute("list", boardService.boardList());
+        Page<Board> list = boardService.boardList(pageable);
+
+        int nowPage = list.getPageable().getPageNumber() + 1;      //0부터 시작이기때문에 1을 더해줘야 1부터 시작되게 된다.
+        int startPage = Math.max(nowPage - 4, 1);   //1보다 작게 나오면 1이 나오게 한다.
+        int endPage= Math.min(nowPage + 5, list.getTotalPages());
+
+        model.addAttribute("list", list);
+        model.addAttribute("nowPage",nowPage);
+        model.addAttribute("startPage",startPage);
+        model.addAttribute("endPage",endPage);
 
         return "board/boardList";
     }
 
     @GetMapping ("/board/view") //localhost:9090/board/view?id=1
-    public String boardView(Model model, Integer id) {
+    public String boardView(Model model, Long id) {
         model.addAttribute("board", boardService.boardView(id));
         return "board/boardView";
     }
 
     @GetMapping("/board/delete")
-    public String boardDelete(Integer id, Model model) {
+    public String boardDelete(Long id, Model model) {
         boardService.boardDelete(id);
 
         model.addAttribute("message", "글이 삭제되었습니다.");
@@ -95,7 +122,7 @@ public class BoardController {
     }
 
     @GetMapping("/board/modify/{id}")
-    public String boardModify(@PathVariable("id") Integer id, Model model){
+    public String boardModify(@PathVariable("id") Long id, Model model){
 
         model.addAttribute("board", boardService.boardView(id));
 
@@ -103,7 +130,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/update/{id}")
-    public String boardUpdate(@PathVariable("id") Integer id, Board board, Model model) {
+    public String boardUpdate(@PathVariable("id") Long id, Board board, Model model) {
 
         Board boardTemp = boardService.boardView(id);
         boardTemp.setTitle(board.getTitle());
@@ -120,10 +147,10 @@ public class BoardController {
 
     //조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가
     @GetMapping("/board/{id}")
-    public String getBoard(@PathVariable Integer id, Model model) {
-        Optional<Board> optionalboard = boardRepository.findById(id);
-        if(optionalboard.isPresent()) {
-            Board board = optionalboard.get();
+    public String getBoard(@PathVariable Long id, Model model) {
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        if(optionalBoard.isPresent()) {
+            Board board = optionalBoard.get();
             board.setViews(board.getViews() + 1);   //조회수 증가
             boardRepository.save(board);            //변경된 조회수를 저장
             model.addAttribute("board", board);

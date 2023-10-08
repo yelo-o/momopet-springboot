@@ -85,4 +85,9 @@ public class MemberService {
 //        findUser.upgrade(); //SITTER => OWNER 업그레이드
     }
 
+    // 충전 금액 증가
+    public void increasePoint(int point, User user) {
+        user.pointUp(point);
+    }
+
 }

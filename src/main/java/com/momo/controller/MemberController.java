@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -267,5 +268,24 @@ public class MemberController {
         return "redirect:/members/myInfo";
 
     }
+
+    //=카카오페이 충전=//
+    @GetMapping("members/myPoint")
+    public String myPointForm(Model model, @LoginUser SessionUser user) {
+
+        User findUser = memberService.findOne(user.getEmail());
+        model.addAttribute("user", findUser);
+        return "members/myPointForm";
+    }
+    @PostMapping("members/myPoint")
+    public String myPoint(@RequestParam("amount") int point, @LoginUser SessionUser user) {
+        log.info("충전한 포인트:"+ point);
+        User findUser = memberService.findOne(user.getEmail());
+        memberService.increasePoint(point, findUser);
+
+        return "redirect:/members/myPoint";
+    }
+
+
 
 }

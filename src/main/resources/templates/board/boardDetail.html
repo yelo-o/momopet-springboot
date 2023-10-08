@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="fragments/header :: header"/>
+    <meta charset="UTF-8">
+    <title>게시글 리스트 페이지</title>
+</head>
+
+<body>
+<div th:replace="fragments/bodyHeader :: bodyHeader"/>
+
+<div class="container">
+
+    <!-- Page Heading -->
+    <br>
+    <h1 class="h3 mb-2 text-gray-800">내 펫 자랑하기 게시판</h1>
+    <p class="mb-4">※내 펫을 자랑해봐요※</p>
+
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <a href="/board/write" class="btn btn-primary text-white">글쓰기</a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="dataTables_length" id="dataTable_length"><label>Show <select
+                                    name="dataTable_length" aria-controls="dataTable"
+                                    class="custom-select custom-select-sm form-control form-control-sm">
+                                <option value="10">10</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select> entries</label></div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div id="dataTable_filter" class="dataTables_filter"><label>Search:<input type="search"
+                                                                                                      class="form-control form-control-sm"
+                                                                                                      placeholder=""
+                                                                                                      aria-controls="dataTable"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0"
+                                   role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                                <thead>
+                                <tr role="row">
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1"
+                                        colspan="1" aria-sort="ascending"
+                                        aria-label="Name: activate to sort column descending" style="width: 50px;">
+                                        글번호
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"
+                                        aria-label="Position: activate to sort column ascending"
+                                        style="width: 174.091px;">제목
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"
+                                        aria-label="Office: activate to sort column ascending"
+                                        style="width: 73.0909px;">작성자
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"
+                                        aria-label="Start date: activate to sort column ascending"
+                                        style="width: 74.0909px;">작성일
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"
+                                        aria-label="Salary: activate to sort column ascending"
+                                        style="width: 90.0909px;">조회수
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr class="odd" th:each="board : ${list}">
+                                    <td class="sorting_1" th:text="${board.id}">글번호</td>
+                                    <td>
+                                        <a th:text="${board.title}" th:href="@{/board/view(id=${board.id})}">제목</a>
+                                    </td>
+                                    <td th:text="${board.name}">조용훈</td>
+                                    <td th:text="${board.getCreatedDate()}">2008/11/28</td>
+                                    <td th:text="${board.views}">조회수</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<div th:replace="fragments/footer :: footer"/>
+</html>

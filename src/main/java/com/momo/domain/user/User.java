@@ -5,6 +5,7 @@ import com.momo.domain.Board;
 import com.momo.domain.Item;
 import com.momo.domain.Order;
 import com.momo.domain.member.Pet;
+import com.momo.domain.member.Point;
 import com.momo.domain.member.PrivateInformation;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +20,7 @@ import static com.momo.domain.user.Role.USER;
 
 @Getter @Setter
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users") //H2 데이터베이스에서 "user"가 예약어로 지정되어 있어서 "users"로 변경
 @Entity
 public class User extends BaseTimeEntity  {
 
@@ -47,7 +48,6 @@ public class User extends BaseTimeEntity  {
     private List<Board> boards = new ArrayList<>();
 
 
-    //=멤버 변수=//
     @Embedded
     private PrivateInformation privateInformation;
 
@@ -57,6 +57,12 @@ public class User extends BaseTimeEntity  {
     @OneToMany(mappedBy = "user")
     private List<Order> orders = new ArrayList<>();
 
+    @Column
+    private int point; //잔액
+
+    @OneToMany(mappedBy = "user")
+    private List<Point> points = new ArrayList<>();
+  
     @Builder
     public User(String name, String email, String picture, Role role, PrivateInformation privateInformation) {
         this.name = name;
@@ -108,6 +114,12 @@ public class User extends BaseTimeEntity  {
 
     public String getRoleKey() {
         return this.role.getKey();
+    }
+
+    // 충전 금액 증가 메소드
+    public User pointUp(int point) {
+        this.point += point;
+        return this;
     }
 
 }
