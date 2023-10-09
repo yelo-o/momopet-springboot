@@ -28,4 +28,8 @@ public class OrderService {
     public List<Order> findSittingOrders(String email) {
         return orderRepository.findSittingOrders(email);
     }
+
+    public Order findOne(Long orderId) {
+        return orderRepository.findOne(orderId);
+    }
 }

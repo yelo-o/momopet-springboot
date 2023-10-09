@@ -38,10 +38,24 @@ public class Order {
     @OneToOne(mappedBy = "order")
     private Review review;
 
+    /**
+     * 주문에 오더아이템 추가
+     */
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
         orderItem.setOrder(this);
     }
+
+    /**
+     * 전체 주문 가격 조회
+     */
+    public int getTotalPrice() {
+        //위의 코드를 줄인 문법
+        return orderItems.stream()
+                .mapToInt(OrderItem::getTotalPrice)
+                .sum();
+    }
+
 
 /*    public static Order createOrder(User user, int day, OrderItem... orderItems) {
         Order order = new Order();
@@ -55,14 +69,5 @@ public class Order {
     }*/
 
 
-    /**
-     * 전체 주문 가격 조회
-     */
-    public int getTotalPrice() {
-        //위의 코드를 줄인 문법
-        return orderItems.stream()
-                .mapToInt(OrderItem::getTotalPrice)
-                .sum();
-    }
 
 }

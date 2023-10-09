@@ -55,6 +55,20 @@ public class OrderController {
         return "redirect:/items";
     }
 
+    @GetMapping("/members/orders/{orderId}/accepted")
+    public String acceptOrder(@PathVariable Long orderId) {
+        Order order = orderService.findOne(orderId);
+        order.setStatus(OrderStatus.ACCEPTED);
+        return "redirect:/members/myOrder";
+    }
+
+    @GetMapping("/members/orders/{orderId}/declined")
+    public String declineOrder(@PathVariable Long orderId) {
+        Order order = orderService.findOne(orderId);
+        order.setStatus(OrderStatus.DECLINED);
+        return "redirect:/members/myOrder";
+    }
+
 /*    @GetMapping("/orders/new/{itemId}")
     public String createOrderForm(@PathVariable Long itemId, @LoginUser SessionUser user) {
         User findUser = memberService.findOne(user.getEmail());
