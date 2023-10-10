@@ -38,12 +38,12 @@ public class Board extends BaseTimeEntity{
 
 
     // 게시글과 댓글을 양방향 관계 설정
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Comment> comments = new ArrayList<>();
-
-    public void addComment(Comment comment) {
-        comments.add(comment);
-        comment.setBoard(this);
-    }
+//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Comment> comments = new ArrayList<>();
+//
+//    public void addComment(Comment comment) {
+//        comments.add(comment);
+//        comment.setBoard(this);
+//    }
 
 }

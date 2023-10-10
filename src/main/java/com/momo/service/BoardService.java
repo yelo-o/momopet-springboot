@@ -1,9 +1,7 @@
 package com.momo.service;
 
 import com.momo.domain.Board;
-import com.momo.domain.Like;
 import com.momo.repository.BoardRepository;
-import com.momo.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
