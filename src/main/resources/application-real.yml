@@ -1,3 +1,6 @@
+server:
+  port: 9090
+
 spring:
   profiles:
     include: oauth, aws, real-db
