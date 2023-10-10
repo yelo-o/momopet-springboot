@@ -67,7 +67,7 @@ public class ItemController {
 
         item.setSitter(findUser);
 
-        item.setPrice(form.getPrice());
+        item.setPrice((int)(form.getPrice() * 1.1)); //부가세 포함
         item.setIntroduction(form.getIntroduction());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
