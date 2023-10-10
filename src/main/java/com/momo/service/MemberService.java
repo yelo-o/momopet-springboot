@@ -85,9 +85,18 @@ public class MemberService {
 //        findUser.upgrade(); //SITTER => OWNER 업그레이드
     }
 
-    // 충전 금액 증가
-    public void increasePoint(int point, User user) {
-        user.pointUp(point);
+    // 포인트 충전
+    public void chargePoint(Long point, User user) {
+        memberRepository.save( Point.builder()
+                .amount(point)
+                .user(user).build());
+    }
+
+    //포인트 잔액 조회
+    public void checkBalance(User user) {
+        Long balance =  memberRepository.getBalance(user.getId());
+        log.info("잔액 계산" + balance);
+        user.pointUp(balance);
     }
 
 }

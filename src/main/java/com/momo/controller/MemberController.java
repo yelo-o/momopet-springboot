@@ -274,14 +274,15 @@ public class MemberController {
     public String myPointForm(Model model, @LoginUser SessionUser user) {
 
         User findUser = memberService.findOne(user.getEmail());
+        memberService.checkBalance(findUser);
         model.addAttribute("user", findUser);
         return "members/myPointForm";
     }
     @PostMapping("members/myPoint")
-    public String myPoint(@RequestParam("amount") int point, @LoginUser SessionUser user) {
+    public String myPoint(@RequestParam("amount") Long point, @LoginUser SessionUser user) {
         log.info("충전한 포인트:"+ point);
         User findUser = memberService.findOne(user.getEmail());
-        memberService.increasePoint(point, findUser);
+        memberService.chargePoint(point, findUser);
 
         return "redirect:/members/myPoint";
     }
