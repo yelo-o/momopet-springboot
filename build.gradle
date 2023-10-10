@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'jpabook'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.1-SNAPSHOT-'+new Date().format("yyyyMMddHHmmss")
 
 java {
 	sourceCompatibility = '11'
@@ -57,8 +57,20 @@ dependencies {
 	//S3 파일 업로드
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+
+	//mariaDB 드라이버 등록
+	implementation 'org.mariadb.jdbc:mariadb-java-client'
+
+	//spring-session-jdbc 등록(데이터베이스를 세션 저장소로 사용하기)
+	implementation 'org.springframework.session:spring-session-jdbc'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// SNAPSHOT-plain.jar 파일 생성 안되도록 수정
+jar {
+	enabled = false
 }
