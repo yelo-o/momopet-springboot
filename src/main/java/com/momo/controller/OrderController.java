@@ -59,6 +59,7 @@ public class OrderController {
     public String acceptOrder(@PathVariable Long orderId) {
         Order order = orderService.findOne(orderId);
         order.setStatus(OrderStatus.ACCEPTED);
+        //결제 진행
         return "redirect:/members/myOrder";
     }
 
@@ -66,6 +67,13 @@ public class OrderController {
     public String declineOrder(@PathVariable Long orderId) {
         Order order = orderService.findOne(orderId);
         order.setStatus(OrderStatus.DECLINED);
+        return "redirect:/members/myOrder";
+    }
+
+    @GetMapping("/members/orders/{orderId}/completed")
+    public String completedOrder(@PathVariable Long orderId) {
+        Order order = orderService.findOne(orderId);
+        order.setStatus(OrderStatus.COMPLETED);
         return "redirect:/members/myOrder";
     }
 
