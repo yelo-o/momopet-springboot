@@ -1,13 +1,16 @@
 package com.momo.repository;
 
 import com.momo.domain.member.Pet;
+import com.momo.domain.member.Point;
 import com.momo.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.swing.text.html.parser.Entity;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,9 @@ public class MemberRepository{
 
     public void save(Pet pet) {
         em.persist(pet);
+    }
+
+    public void save(Point point) { em.persist(point);
     }
 
     public User findOne(Long id) { //단건 조회
@@ -51,6 +57,17 @@ public class MemberRepository{
         return em.createQuery("select p from Pet p where p.owner.id = :id", Pet.class)
                 .setParameter("id", id)
                 .getSingleResult();
+    }
+
+    //잔액 조회
+    public Long getBalance(Long id) {
+        Query query = em.createQuery("select sum(p.amount) from Point p where p.user.id = :id");
+        query.setParameter("id", id);
+        if (query.getSingleResult() != null) {
+            return (Long) query.getSingleResult();
+        } else {
+            return 0L;
+        }
     }
 
 
