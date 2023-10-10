@@ -1,7 +1,9 @@
 package com.momo.service;
 
 import com.momo.domain.Board;
+import com.momo.domain.Like;
 import com.momo.repository.BoardRepository;
+import com.momo.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,10 @@ public class BoardService {
 
     @Autowired
     private BoardRepository boardRepository;
+
+    public List<Board> getAllBoards() {
+        return boardRepository.findAll();
+    }
 
     //게시글 작성 처리
     public void write(Board board) {
@@ -38,6 +44,5 @@ public class BoardService {
     public Board findById(Long boardId) {
         return boardRepository.findById(boardId).orElse(null);
     }
-
 
 }
