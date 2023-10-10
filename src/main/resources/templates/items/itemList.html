@@ -76,7 +76,7 @@
         <tr th:each="item : ${items}">
             <td>
                 <div>
-                    <img th:src="${item.sitter.picture}" alt="" class="rounded-circle mx-auto d-block">
+                    <img th:src="${item.sitter.picture}" alt="" class="rounded-circle mx-auto d-block" style="height: 95px;">
                 </div>
             </td>
             <td th:text="${item.price}"></td>

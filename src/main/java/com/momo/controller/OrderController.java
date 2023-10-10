@@ -56,10 +56,43 @@ public class OrderController {
     }
 
     @GetMapping("/members/orders/{orderId}/accepted")
-    public String acceptOrder(@PathVariable Long orderId) {
+    public String acceptOrder(@PathVariable Long orderId, @LoginUser SessionUser user,
+                              Model model) {
         Order order = orderService.findOne(orderId);
-        order.setStatus(OrderStatus.ACCEPTED);
+
         //결제 진행
+        User buyer = order.getUser();
+        User seller = memberService.findOne(user.getEmail());
+
+        //전체 금액(공급가+부가세)
+        int totalPrice = order.getTotalPrice(); //11,000원
+
+        //공급가
+        int supplyPrice = (int) (totalPrice / 1.1); //10,000원
+
+        //부가세
+        int tax = totalPrice - supplyPrice; //1,000원
+
+        //구매자 포인트 잔액 확인
+        memberService.checkBalance(buyer);
+        log.info("구매자 포인트 잔액 : " + buyer.getBalance());
+
+        // 구매자의 금액 확인
+        if (buyer.getBalance() < totalPrice) {
+            model.addAttribute("message", "구매자의 잔액이 부족합니다.");
+            model.addAttribute("searchUrl", "/members/myOrder");
+
+            return "items/message";
+        }
+
+        //구매자에게 전체금액만큼 차감
+        memberService.chargePoint(-Long.valueOf(totalPrice), buyer);
+        //판매자에게 공급가만큼 추가
+        memberService.chargePoint(Long.valueOf(supplyPrice), seller);
+
+        // 상태 ACCEPTED로 변경
+        order.setStatus(OrderStatus.ACCEPTED);
+
         return "redirect:/members/myOrder";
     }
 
