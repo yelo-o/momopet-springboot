@@ -8,6 +8,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
   session:
     store-type: jdbc
+
   servlet:
     multipart:
       max-file-size: 10MB
