@@ -14,6 +14,7 @@ import javax.persistence.*;
 public class Point extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "point_id")
     private Long id;
 
     private Long amount;

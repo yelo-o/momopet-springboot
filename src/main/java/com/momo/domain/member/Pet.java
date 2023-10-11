@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Getter @Setter
 public class Pet extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pet_id")
     private Long id;
 

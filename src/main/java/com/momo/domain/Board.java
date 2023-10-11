@@ -32,6 +32,7 @@ public class Board extends BaseTimeEntity{
 
     private String photo;
 
+
     @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL)
     private List<Reply> replies;
 

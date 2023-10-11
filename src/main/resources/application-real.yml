@@ -1,0 +1,15 @@
+server:
+  port: 9090
+
+spring:
+  profiles:
+    include: oauth, aws, real-db
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  session:
+    store-type: jdbc
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
