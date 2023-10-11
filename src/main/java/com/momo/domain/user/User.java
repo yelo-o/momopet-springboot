@@ -1,9 +1,6 @@
 package com.momo.domain.user;
 
-import com.momo.domain.BaseTimeEntity;
-import com.momo.domain.Board;
-import com.momo.domain.Item;
-import com.momo.domain.Order;
+import com.momo.domain.*;
 import com.momo.domain.member.Pet;
 import com.momo.domain.member.Point;
 import com.momo.domain.member.PrivateInformation;
@@ -33,6 +30,8 @@ public class User extends BaseTimeEntity  {
 
     @Column(nullable = false)
     private String email;
+
+    private String loginId;
 
     @Column
     private String picture;
@@ -121,5 +120,6 @@ public class User extends BaseTimeEntity  {
         this.balance = balance;
         return this;
     }
+
 
 }

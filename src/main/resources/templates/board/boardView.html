@@ -5,7 +5,7 @@
     <head th:replace="fragments/header :: header"/>
     <meta charset="UTF-8">
     <title>게시글 상세 페이지</title>
-    <script src=" http://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <!-- 자바스크립트에 타임리프표현식 전달하는 방법 -->
 
@@ -31,7 +31,7 @@
                 </div>
 
                 <label th:for="board.content">내용</label>
-                <textarea type="text" th:field="${board.content}" class="form-control" rows="15" readonly></textarea>
+                <textarea type="text" th:field="${board.content}" class="form-control" rows="10" readonly></textarea>
                 <div class="text-center"><br>
                     <a class="btn btn-secondary text-white" th:href="@{/board/list}">뒤로가기</a>
                     <a class="btn btn-info" th:href="@{/board/delete(id=${board.id})}">글 삭제</a>
@@ -39,51 +39,32 @@
                 </div>
             </div>
 
-
-
-
-
-            <div th:replace="fragments/footer :: footer"/>
         </div>
     </form>
 
-    <div>
-        <input type="text" id="commentWriter" placeholder="작성자">
-        <input type="text" id="commentContents" placeholder="내용">
-        <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
-    </div>
+    <div class="container">
+        <div class="form-group">
+    <h2>댓글</h2>
+    <ul>
+        <br>
+        <li th:each="reply : ${board.replies}">
+            <div>작성자: <span th:text="${board.name}"></span></div>
+            <div>댓글: <span class="form-control" readonly th:text="${reply.text}"></span></div>
+        </li>
+    </ul>
 
 
-
-    <script  th:inline="javascript">
-        const boardId = [[${board.id}]];
-        const commentWrite = () => {
-            const writer = document.getElementById("commentWriter").value;
-            const contents = document.getElementById("commentContents").value;
-
-            $.ajax({
-                type: "post",
-                url: "/comment/save",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    commentWriter: writer,
-                    commentContents: contents,
-                    board_id: boardId
-                }),
-                dataType: "json",
-                success: function(commentList) {
-                    console.log("작성 성공");
-                    // 성공 시 댓글 목록을 업데이트하거나 필요한 작업을 수행할 수 있음
-                },
-                error: function(){
-                    console.log("실패");
-                }
-            });
-        }
+    <form th:action="@{'/board/' + ${board.id} + '/reply'}" method="post">
+        <span><input class="form-control" type="text" name="text" placeholder="댓글 내용"></span>
+        <span><button class="btn btn-primary" type="submit">댓글 작성</button></span>
+    </form>
 
 
-    </script>
+    <div th:replace="fragments/footer :: footer"/>
 </div>
+</div>
+</div>
+
 </body>
 </html>
 

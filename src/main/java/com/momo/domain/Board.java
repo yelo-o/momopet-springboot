@@ -30,20 +30,9 @@ public class Board extends BaseTimeEntity{
     @Column
     private String name;
 
-    //private LocalDateTime postingDate;
-
-    private int view; //조회수
-
     private String photo;
 
-
-    // 게시글과 댓글을 양방향 관계 설정
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Comment> comments = new ArrayList<>();
-
-    public void addComment(Comment comment) {
-        comments.add(comment);
-        comment.setBoard(this);
-    }
+    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL)
+    private List<Reply> replies;
 
 }
