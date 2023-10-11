@@ -1,6 +1,10 @@
 package com.momo.domain.user;
 
-import com.momo.domain.*;
+
+import com.momo.domain.BaseTimeEntity;
+import com.momo.domain.Board;
+import com.momo.domain.Item;
+import com.momo.domain.Order;
 import com.momo.domain.member.Pet;
 import com.momo.domain.member.Point;
 import com.momo.domain.member.PrivateInformation;
@@ -19,7 +23,7 @@ import static com.momo.domain.user.Role.USER;
 @NoArgsConstructor
 @Table(name = "users") //H2 데이터베이스에서 "user"가 예약어로 지정되어 있어서 "users"로 변경
 @Entity
-public class User extends BaseTimeEntity  {
+public class User extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -30,8 +34,6 @@ public class User extends BaseTimeEntity  {
 
     @Column(nullable = false)
     private String email;
-
-    private String loginId;
 
     @Column
     private String picture;
