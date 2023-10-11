@@ -87,10 +87,10 @@
             <td th:text="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')}"></td>
             <td th:text="${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"></td>
             <td>
-                <!--                <a th:href="@{items/{id}/edit (id=${item.id})}" class="btn btn-primary" role="button">돌봄 요청하기</a>-->
                 <button class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="${'#editModal' + item.id}"
                         th:data-row="${item}" th:attr="data-target=${'#editModal'+item.id}">돌봄 요청하기
                 </button>
+                <!--                <a th:href="@{items/{id}/edit (id=${item.id})}" class="btn btn-primary" role="button">돌봄 요청하기</a>-->
                 <!--                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" th:data-row="${item}">돌봄 요청하기</button>-->
             </td>
         </tr>
@@ -106,30 +106,50 @@
      th:attr="id=${'editModal' + item.id}">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">아래 돌보미께 돌봄 신청하시겠습니까?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" th:align="center">
-                <div>
-                    <img th:src="${item.sitter.picture}" alt="" class="rounded-circle mx-auto d-block">
+            <form method="post" th:action="@{/orders/new/{id} (id=${item.id})}" th:object="${form}">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">아래 돌보미께 돌봄 신청하시겠습니까?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div>일급: <span th:text="${item.price}"></span></div>
-                <div>자기소개: <span th:text="${item.introduction}"></span></div>
-                <div>돌봄가능펫: <span th:if="${item.dog}">개</span> <span th:if="${item.cat}">고양이</span></div>
-                <div>주소: <span th:text="${item.sitter.privateInformation.address.si}"></span>
-                          <span th:text="${item.sitter.privateInformation.address.gu}"></span></div>
-                <div>
-                    가능날짜:
-                    <span th:text="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')}"></span>
-                    ~
-                    <span th:text="${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"></span>
+                <div class="modal-body" th:align="center">
+                    <div>
+                        <img th:src="${item.sitter.picture}" alt="" class="rounded-circle mx-auto d-block">
+                    </div>
+                    <div>일급: <span th:text="${item.price}"></span></div>
+                    <div>자기소개: <span th:text="${item.introduction}"></span></div>
+                    <div>돌봄가능펫: <span th:if="${item.dog}">개</span> <span th:if="${item.cat}">고양이</span></div>
+                    <div>주소: <span th:text="${item.sitter.privateInformation.address.si}"></span>
+                        <span th:text="${item.sitter.privateInformation.address.gu}"></span></div>
+                    <div>
+                        가능날짜:
+                        <span th:text="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')}"></span>
+                        -
+                        <span th:text="${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"></span>
+                        <input type="hidden" id="itemStartDate" th:value="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')}"/>
+                        <input type="hidden" id="itemEndDate" th:value="${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"/>
+<!--                        <script th:inline="javascript">
+                            let itemStartDate =
+                        </script>-->
+                    </div>
+                    <br>
+                    <div class="col-lg-9">
+                        돌봄 신청날짜:
+                        <label th:for="daterangeRequest"></label>
+                        <!--                    <input class="form-control text-center" type="text" name="daterangeRequest"
+                                                   th:value="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')} + ' - ' + ${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}" readonly/>-->
+                        <input class="form-control text-center" type="text" name="daterangeRequest" readonly/>
+                        <input type="hidden" th:field="*{startDate}"/>
+                        <input type="hidden" th:field="*{endDate}"/>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                <a th:href="@{/orders/new/{id} (id=${item.id})}" class="btn btn-primary" role="button">돌봄 요청하기</a>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="submit" class="btn btn-primary">돌봄 요청하기</button>
+                    <!--<button type="submit" class="btn btn-primary" role="button">돌봄 요청하기</button>-->
+                    <!--                <a th:href="@{/orders/new/{id} (id=${item.id})}" class="btn btn-primary" role="button">돌봄 요청하기</a>-->
+                    <!--                <a th:href="@{/orders/new/{id}/{startDateRequested}/{endDateRequested} (id=${item.id}, startDateRequested=${startDateRequested}, endDateRequested=${item.endDate})}" class="btn btn-primary" role="button">돌봄 요청하기</a>-->
+                </div>
+            </form>
         </div>
     </div>
 </div> <!-- /Modal -->
@@ -144,6 +164,7 @@
                 timePicker: true,
                 timePicker24Hour: true,
                 timePickerIncrement: 15,
+                minDate: new Date(),
                 locale: {
                     format: "YYYY-MM-DD HH:mm",
                     separator: " - ",
@@ -169,7 +190,48 @@
                         "12월"
                     ],
                 },
-                drops: "below",
+                drops: "down",
+            },
+            function (start, end) {
+                $('input[name="startDate"]').val(start.format("YYYY-MM-DD HH:mm"));
+                $('input[name="endDate"]').val(end.format("YYYY-MM-DD HH:mm"));
+            }
+        );
+
+        $('input[name="daterangeRequest"]').daterangepicker(
+            {
+                opens: 'right',
+                timePicker: true,
+                timePicker24Hour: true,
+                timePickerIncrement: 15,
+                minDate: document.getElementById("itemStartDate").value,
+                maxDate: document.getElementById("itemEndDate").value,
+                locale: {
+                    format: "YYYY-MM-DD HH:mm",
+                    separator: " - ",
+                    applyLabel: "확인",
+                    cancelLabel: "취소",
+                    fromLabel: "From",
+                    toLabel: "To",
+                    customRangeLabel: "Custom",
+                    weekLabel: "W",
+                    daysOfWeek: ["일", "월", "화", "수", "목", "금", "토"],
+                    monthNames: [
+                        "1월",
+                        "2월",
+                        "3월",
+                        "4월",
+                        "5월",
+                        "6월",
+                        "7월",
+                        "8월",
+                        "9월",
+                        "10월",
+                        "11월",
+                        "12월"
+                    ],
+                },
+                drops: "down",
             },
             function (start, end) {
                 $('input[name="startDate"]').val(start.format("YYYY-MM-DD HH:mm"));
