@@ -80,6 +80,9 @@
           <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd hh:mm')}"></td>
           <td th:text="${order.status}"></td>
           <td>
+            <a th:if="${order.status != null and order.status == T(com.momo.domain.OrderStatus).PENDING}" th:href="@{/members/orders/{id}/canceled (id=${order.id})}" class="btn btn-primary" role="button">취소</a>
+          </td>
+          <td>
             <a th:if="${order.status != null and order.status == T(com.momo.domain.OrderStatus).ACCEPTED}" th:href="@{/members/orders/{id}/completed (id=${order.id})}" class="btn btn-primary" role="button">완료</a>
           </td>
         </tr>

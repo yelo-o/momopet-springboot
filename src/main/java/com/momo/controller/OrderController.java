@@ -110,6 +110,13 @@ public class OrderController {
         return "redirect:/members/myOrder";
     }
 
+    @GetMapping("/members/orders/{orderId}/canceled")
+    public String cancelOrder(@PathVariable Long orderId) {
+        Order order = orderService.findOne(orderId);
+        order.setStatus(OrderStatus.CANCELED);
+        return "redirect:/members/myOrder";
+    }
+
 /*    @GetMapping("/orders/new/{itemId}")
     public String createOrderForm(@PathVariable Long itemId, @LoginUser SessionUser user) {
         User findUser = memberService.findOne(user.getEmail());
