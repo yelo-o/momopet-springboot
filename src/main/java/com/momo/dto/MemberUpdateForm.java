@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 @Getter @Setter
 public class MemberUpdateForm {
@@ -22,5 +23,6 @@ public class MemberUpdateForm {
     private String gu;
 
     @NotEmpty(message = "전화번호 입력은 필수입니다.")
+    @Pattern(regexp = "^01(?:0|1|[6-9])[.-]?(\\d{3}|\\d{4})[.-]?(\\d{4})$", message = "10 ~ 11 자리의 숫자만 입력 가능합니다.")
     private String phoneNumber;
 }
