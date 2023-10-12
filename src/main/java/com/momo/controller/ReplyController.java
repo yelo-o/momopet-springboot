@@ -7,6 +7,8 @@ import com.momo.domain.Board;
 import com.momo.domain.Reply;
 import com.momo.repository.BoardRepository;
 import com.momo.repository.ReplyRepository;
+import com.momo.service.BoardService;
+import com.momo.service.ReplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,9 +25,13 @@ import java.util.List;
 public class ReplyController {
 
     @Autowired
+    private BoardService boardService;
+    @Autowired
     private ReplyRepository replyRepository;
     @Autowired
     private BoardRepository boardRepository;
+    @Autowired
+    private ReplyService replyService;
 
 
     @GetMapping("/board/{id}/reply")
@@ -57,6 +63,50 @@ public class ReplyController {
             replyRepository.save(reply);
         }
         return "redirect:/board/{id}";
+    }
+
+
+//    @GetMapping("/board/{id}/reply/delete/{replyId}")
+//    public String deleteReply(@PathVariable Long id, @PathVariable Long replyId,
+//                              @LoginUser SessionUser sessionUser, Model model) {
+//        Board board = boardService.boardView(id);
+//        Reply reply = replyService.getReplyById(replyId);
+//
+//        // 세션에 저장된 사용자 정보와 댓글 작성자의 이메일을 확인
+//        if (sessionUser != null && sessionUser.getEmail().equals(board.getSitter().getEmail())) {
+//            // 사용자 정보가 일치하면 댓글을 삭제한다.
+//            replyService.deleteReply(replyId);
+//
+//            model.addAttribute("message", "댓글이 삭제되었습니다.");
+//            model.addAttribute("searchUrl", "redirect:/board/{id}");
+//        } else {
+//            // 사용자 정보가 일치하지 않으면 권한이 없음을 응답한다.
+//            model.addAttribute("message", "댓글 삭제 권한이 없습니다.");
+//            model.addAttribute("searchUrl", "redirect:/board/{id}");
+//        }
+//        return "board/message";
+//    }
+
+    @PostMapping("/board/{id}/reply/delete/{replyId}")
+    public String deleteReply1(@PathVariable Long id, @PathVariable Long replyId,
+                              @LoginUser SessionUser sessionUser, Model model) {
+        // 댓글 정보를 불러온다.
+        Board board = boardService.boardView(id);
+        Reply reply = replyService.getReplyById(replyId);
+
+        // 세션에 저장된 사용자 정보와 댓글 작성자의 이메일이 같은지 확인
+        if (sessionUser != null && sessionUser.getEmail().equals(board.getSitter().getEmail())) {
+            // 사용자 정보가 일치하면 댓글을 삭제한다.
+            replyService.deleteReply(replyId);
+
+            model.addAttribute("message", "댓글이 삭제되었습니다.");
+            model.addAttribute("searchUrl", "/board/view?id=" + id);
+        } else {
+            // 사용자 정보가 일치하지 않으면 권한이 없음을 응답한다.
+            model.addAttribute("message", "댓글 삭제 권한이 없습니다.");
+            model.addAttribute("searchUrl", "/board/view?id=" + id);
+        }
+        return "board/message";
     }
 
 }

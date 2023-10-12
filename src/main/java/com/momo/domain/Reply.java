@@ -3,6 +3,7 @@ package com.momo.domain;
 import com.momo.domain.user.User;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.oauth2.core.oidc.StandardClaimAccessor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,12 +17,13 @@ public class Reply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int replyId;
+    private Long replyId;
 
-    private Long id;
     private String text;
 
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
+
+
 }
