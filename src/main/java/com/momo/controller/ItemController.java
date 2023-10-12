@@ -5,6 +5,7 @@ import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.Item;
 import com.momo.domain.Status;
 import com.momo.domain.user.User;
+import com.momo.domain.user.UserType;
 import com.momo.service.ItemService;
 import com.momo.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -95,6 +96,16 @@ public class ItemController {
 
     @GetMapping("/items")
     public String list(ItemForm form, Model model, @LoginUser SessionUser user) {
+
+        User findUser = memberService.findOne(user.getEmail());
+
+        if (findUser.getUserType() == null) {
+            return "redirect:/members/beSitter";
+        }
+
+        if (findUser.getUserType() == UserType.SITTER) {
+            return "redirect:/members/myPet";
+        }
 
         model.addAttribute("form", new ItemForm());
 
