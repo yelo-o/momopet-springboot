@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Controller
@@ -43,16 +45,29 @@ public class BoardController {
         this.boardRepository = boardRepository;
     }
 
+    private LocalDate toLocalDate(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(date, formatter);
+    }
+
 
     @GetMapping("/board/write")     //localhost:9090/board/write
-    public String boardWriteForm(Model model){
-        model.addAttribute("form", new BoardForm());
-        return "board/boardWrite";
+    public String boardWriteForm(Model model, @LoginUser SessionUser user){
+
+        if(user == null) {
+            model.addAttribute("message", "로그인 하십시오");
+            model.addAttribute("searchUrl", "/board/list");
+            return "board/message";
+        } else {
+            model.addAttribute("form", new BoardForm());
+            return "board/boardWrite";
+        }
     }
 
     @PostMapping("/board/write")
     public  String boardWritePro(@ModelAttribute("form") @Valid BoardForm form, BindingResult bindingResult,
                                  Model model, @LoginUser SessionUser user) throws IOException {
+
 
         if(bindingResult.hasErrors()) {
             return "board/boardWrite";
@@ -97,12 +112,14 @@ public class BoardController {
         int startPage = Math.max(nowPage - 4, 1);   //1보다 작게 나오면 1이 나오게 한다.
         int endPage= Math.min(nowPage + 5, list.getTotalPages());
 
+
         model.addAttribute("list", list);
         model.addAttribute("nowPage",nowPage);
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
 
         return "board/boardList";
+
     }
 
     @GetMapping ("/board/view") //localhost:9090/board/view?id=1
@@ -112,11 +129,22 @@ public class BoardController {
     }
 
     @GetMapping("/board/delete")
-    public String boardDelete(Long id, Model model) {
-        boardService.boardDelete(id);
+    public String boardDelete(@RequestParam Long id, @LoginUser SessionUser sessionUser, Model model) {
+        // 요청된 id에 해당하는 게시글을 DB에서 불러온다.
+        Board board = boardService.boardView(id);
 
-        model.addAttribute("message", "글이 삭제되었습니다.");
-        model.addAttribute("searchUrl", "/board/list");
+        // 세션에 저장된 사용자 정보와 게시글 작성자의 이메일이 같은지 확인
+        if (sessionUser != null && sessionUser.getEmail().equals(board.getSitter().getEmail())) {
+            // 사용자 정보가 일치하면 게시글을 삭제한다.
+            boardService.boardDelete(id);
+
+            model.addAttribute("message", "글이 삭제되었습니다.");
+            model.addAttribute("searchUrl", "/board/list");
+        } else {
+            // 사용자 정보가 일치하지 않으면 권한이 없음을 응답한다.
+            model.addAttribute("message", "글 삭제 권한이 없습니다.");
+            model.addAttribute("searchUrl", "/board/view?id=" + id);
+        }
 
         return "board/message";
     }
@@ -130,16 +158,22 @@ public class BoardController {
     }
 
     @PostMapping("/board/update/{id}")
-    public String boardUpdate(@PathVariable("id") Long id, Board board, Model model) {
+    public String boardUpdate(@PathVariable("id") Long id, Board board, Model model, @LoginUser SessionUser sessionUser) {
 
         Board boardTemp = boardService.boardView(id);
-        boardTemp.setTitle(board.getTitle());
-        boardTemp.setContent(board.getContent());
 
-        boardService.write(boardTemp);
+        if(sessionUser != null && sessionUser.getEmail().equals(boardTemp.getSitter().getEmail())) {
+            boardTemp.setTitle(board.getTitle());
+            boardTemp.setContent(board.getContent());
 
-        model.addAttribute("message", "작성글이 수정되었습니다.");
-        model.addAttribute("searchUrl", "/board/list");
+            boardService.write(boardTemp);
+
+            model.addAttribute("message", "작성글이 수정되었습니다.");
+            model.addAttribute("searchUrl", "/board/{id}");
+        } else  {
+            model.addAttribute("message", "글 수정 권한이 없습니다.");
+            model.addAttribute("searchUrl", "/board/list");
+        }
 
 
         return "board/message";
@@ -147,7 +181,7 @@ public class BoardController {
 
     //조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가 조회수 증가
     @GetMapping("/board/{id}")
-    public String getBoard(@PathVariable Long id, Model model) {
+    public String getBoard(@PathVariable("id") Long id, Model model) {
         Optional<Board> optionalBoard = boardRepository.findById(id);
         if(optionalBoard.isPresent()) {
             Board board = optionalBoard.get();

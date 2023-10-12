@@ -1,6 +1,8 @@
 package com.momo.controller;
 
 
+import com.momo.config.auth.LoginUser;
+import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.Board;
 import com.momo.domain.Reply;
 import com.momo.repository.BoardRepository;
@@ -38,7 +40,15 @@ public class ReplyController {
     }
 
     @PostMapping("/board/{id}/reply")
-    public String addReply(@PathVariable Long id, @RequestParam String text) {
+    public String addReply(@PathVariable Long id, @RequestParam String text, @LoginUser SessionUser user, Model model) {
+
+        // 로그인되어 있지 않으면 댓글 작성 권한이 없다고 처리
+        if (user == null) {
+            model.addAttribute("message", "로그인 하고 오세요");
+            model.addAttribute("searchUrl", "/board/list");
+            return "board/message";
+        }
+
         Board board = boardRepository.findById(id).orElse(null);
         if (board != null) {
             Reply reply = new Reply();

@@ -89,7 +89,7 @@
                                             </div><br>
                                             <div class="d-flex justify-content-between">
                                                 <div>작성자: <div th:text="${board.name}">조용훈</div></div>
-                                                <div>작성시간: <div th:text="${board.getCreatedDate()}">2008/11/28</div></div>
+                                                <div>작성시간: <div th:text="${#temporals.format(board.createdDate, 'yyyy-MM-dd HH:mm')}">2008/11/28</div></div>
                                                 <div>조회수: <div th:text="${board.views}">조회수</div></div>
                                             </div>
                                         </div>
