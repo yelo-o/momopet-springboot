@@ -49,7 +49,7 @@ public class ItemController {
         model.addAttribute("user", findUser);
         log.info("로그인 이름 : " + user.getName());
 
-        return "/items/createItemForm";
+        return "items/createItemForm";
     }
 
     @PostMapping("/items/new")
