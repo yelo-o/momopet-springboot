@@ -125,19 +125,18 @@
                         <span th:text="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')}"></span>
                         -
                         <span th:text="${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"></span>
-                        <input type="hidden" id="itemStartDate" th:value="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')}"/>
-                        <input type="hidden" id="itemEndDate" th:value="${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"/>
-<!--                        <script th:inline="javascript">
-                            let itemStartDate =
-                        </script>-->
+                        <input type="hidden" id="itemStartDate"
+                               th:value="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')}"/>
+                        <input type="hidden" id="itemEndDate"
+                               th:value="${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"/>
                     </div>
                     <br>
                     <div class="col-lg-9">
                         돌봄 신청날짜:
                         <label th:for="daterangeRequest"></label>
-                        <!--                    <input class="form-control text-center" type="text" name="daterangeRequest"
-                                                   th:value="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')} + ' - ' + ${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}" readonly/>-->
-                        <input class="form-control text-center" type="text" name="daterangeRequest" readonly/>
+                        <input class="form-control text-center" type="text" name="daterangeRequest"
+                               th:value="${#temporals.format(item.startDate, 'yyyy-MM-dd HH:mm')} + ' - ' + ${#temporals.format(item.endDate, 'yyyy-MM-dd HH:mm')}"
+                               readonly/>
                         <input type="hidden" th:field="*{startDate}"/>
                         <input type="hidden" th:field="*{endDate}"/>
                     </div>
@@ -153,7 +152,6 @@
         </div>
     </div>
 </div> <!-- /Modal -->
-
 
 <script>
 
@@ -197,15 +195,19 @@
                 $('input[name="endDate"]').val(end.format("YYYY-MM-DD HH:mm"));
             }
         );
+    });
 
-        $('input[name="daterangeRequest"]').daterangepicker(
+    $('input[name="daterangeRequest"]').each(function (index) {
+        var itemStartDate = $('[id^="itemStartDate"]').eq(index).val(); // 각 item의 startDate 가져오기
+        var itemEndDate = $('[id^="itemEndDate"]').eq(index).val(); // 각 item의 endDate 가져오기
+        $(this).daterangepicker(
             {
                 opens: 'right',
                 timePicker: true,
                 timePicker24Hour: true,
                 timePickerIncrement: 15,
-                minDate: document.getElementById("itemStartDate").value,
-                maxDate: document.getElementById("itemEndDate").value,
+                minDate: itemStartDate, // 각 item의 startDate를 minDate로 설정
+                maxDate: itemEndDate, // 각 item의 endDate를 maxDate로 설정
                 locale: {
                     format: "YYYY-MM-DD HH:mm",
                     separator: " - ",
@@ -238,6 +240,7 @@
                 $('input[name="endDate"]').val(end.format("YYYY-MM-DD HH:mm"));
             }
         );
+
     });
 </script>
 

@@ -27,35 +27,35 @@ public class OrderController {
     private final MemberService memberService;
     private final ItemService itemService;
 
-        @PostMapping("/orders/new/{itemId}")
-        public String createOrder(@ModelAttribute("form") ItemForm form, @PathVariable Long itemId, @LoginUser SessionUser user) {
-            //엔티티 조회
-            User findUser = memberService.findOne(user.getEmail());
-            Item item = itemService.findOne(itemId);
+    @PostMapping("/orders/new/{itemId}")
+    public String createOrder(@ModelAttribute("form") ItemForm form, @PathVariable Long itemId, @LoginUser SessionUser user) {
+        //엔티티 조회
+        User findUser = memberService.findOne(user.getEmail());
+        Item item = itemService.findOne(itemId);
 
-            //주문 생성
-            Order order = new Order();
-            order.setUser(findUser);
-            order.setOrderDate(LocalDateTime.now());
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime startDateTime = LocalDateTime.parse(form.getStartDate(), formatter);
-            LocalDateTime endDateTime = LocalDateTime.parse(form.getEndDate(), formatter);
-            order.setStartDate(startDateTime);
-            order.setEndDate(endDateTime);
-            order.setStatus(OrderStatus.PENDING);
-            log.info("스타트데이트: " + form.getStartDate());
-            log.info("엔드데이트: " + form.getEndDate());
+        //주문 생성
+        Order order = new Order();
+        order.setUser(findUser);
+        order.setOrderDate(LocalDateTime.now());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime startDateTime = LocalDateTime.parse(form.getStartDate(), formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse(form.getEndDate(), formatter);
+        order.setStartDate(startDateTime);
+        order.setEndDate(endDateTime);
+        order.setStatus(OrderStatus.PENDING);
+        log.info("스타트데이트: " + form.getStartDate());
+        log.info("엔드데이트: " + form.getEndDate());
 
-            //주문상품 생성
-            OrderItem orderItem = OrderItem.createOrderItem(item);
-            order.addOrderItem(orderItem);
+        //주문상품 생성
+        OrderItem orderItem = OrderItem.createOrderItem(item);
+        order.addOrderItem(orderItem);
 
-            //주문 저장
-            orderService.saveOrder(order, orderItem);
-            log.info("오더아이템 아이디: " + orderItem.getId());
+        //주문 저장
+        orderService.saveOrder(order, orderItem);
+        log.info("오더아이템 아이디: " + orderItem.getId());
 
-            return "redirect:/items";
-        }
+        return "redirect:/items";
+    }
 
     @GetMapping("/members/orders/{orderId}/accepted")
     public String acceptOrder(@PathVariable Long orderId) {
