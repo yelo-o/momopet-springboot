@@ -4,17 +4,16 @@ import com.momo.config.auth.LoginUser;
 import com.momo.config.auth.dto.SessionUser;
 import com.momo.domain.Item;
 import com.momo.domain.Status;
-import com.momo.domain.member.PrivateInformation;
 import com.momo.domain.user.User;
 import com.momo.service.ItemService;
 import com.momo.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,24 +45,33 @@ public class ItemController {
         }
 
         model.addAttribute("form", new ItemForm());
-        model.addAttribute("user", user);
-        model.addAttribute("privateInformation", findUser.getPrivateInformation());
+        model.addAttribute("user", findUser);
         log.info("로그인 이름 : " + user.getName());
 
-        return "items/createItemForm";
+        return "/items/createItemForm";
     }
 
     @PostMapping("/items/new")
-    public String create(ItemForm form, @LoginUser SessionUser user) {
-
-/*        //createItemForm에 오류가 있는지 확인 (Validation)
-        if (result.hasErrors()) {
-            return "items/createItemForm";
-        }*/
-
-        Item item = new Item();
+    public String create(@ModelAttribute("form") @Valid ItemForm form, BindingResult result,
+                         @LoginUser SessionUser user, Model model) {
 
         User findUser = memberService.findOne(user.getEmail());
+        //createItemForm에 오류가 있는지 확인 (Validation)
+        if (result.hasErrors()) {
+            model.addAttribute(("user"), findUser);
+            if (!form.getDog() && !form.getCat()) {
+                result.addError(new FieldError("form", "dog", "적어도 1개 선택은 필수입니다."));
+            }
+            return "items/createItemForm";
+        }
+        //createItemForm에 개나 고양이 중 하나라도 선택했는지 확인 (Validation)
+        if (!form.getDog() && !form.getCat()) {
+            model.addAttribute(("user"), findUser);
+            result.addError(new FieldError("form", "dog", "적어도 1개 선택은 필수입니다."));
+            return "items/createItemForm";
+        }
+
+        Item item = new Item();
 
         item.setSitter(findUser);
 

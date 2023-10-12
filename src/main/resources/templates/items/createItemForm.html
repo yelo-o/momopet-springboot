@@ -4,6 +4,12 @@
     <div th:replace="fragments/header :: header"></div>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
 
+    <style>
+        .fieldError {
+            border-color: #bd2130;
+        }
+    </style>
+
     <!--Daterangepicker 관련 CSS & JS-->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -23,52 +29,52 @@
             <input type="text" th:field="${user.name}" class="form-control" readonly></div>
         <div class="form-group">
             <label th:for="privateInformation.gender">성별</label>
-            <input type="text" th:field="${privateInformation.gender}" class="form-control" readonly>
+            <input type="text" th:field="${user.privateInformation.gender}" class="form-control" readonly>
         </div>
         <br/>
         <h6>주소</h6>
         <div class="form-group">
             <label th:for="privateInformation.address.si">시</label>
-            <input type="text" th:field="${privateInformation.address.si}" class="form-control" readonly>
+            <input type="text" th:field="${user.privateInformation.address.si}" class="form-control" readonly>
             <label th:for="privateInformation.address.gu">구</label>
-            <input type="text" th:field="${privateInformation.address.gu}" class="form-control" readonly>
+            <input type="text" th:field="${user.privateInformation.address.gu}" class="form-control" readonly>
         </div>
         <hr>
         <div class="form-group">
             <label th:for="price">일급</label>
-            <input class="form-control" placeholder="일급을 입력하세요" th:field="*{price}"
-                   type="number" min="0"></div>
+            <input type="number" min="0" placeholder="일급을 입력하세요" th:field="*{price}"
+                   th:class="${#fields.hasErrors('price')}? 'form-control fieldError' : 'form-control'"></div>
+            <p th:if="${#fields.hasErrors('price')}"
+               th:errors="*{price}">Incorrect price</p>
         <div class="form-group">
             <label th:for="introduction">자기소개</label>
-            <textarea class="form-control" placeholder="자기소개를 입력하세요" th:field="*{introduction}"
-                      type="text"></textarea></div>
+            <textarea type="text" placeholder="자기소개를 입력하세요" th:field="*{introduction}"
+                      th:class="${#fields.hasErrors('introduction')}? 'form-control fieldError' : 'form-control'"></textarea>
+            <p th:if="${#fields.hasErrors('introduction')}"
+               th:errors="*{introduction}">Incorrect introduction</p>
+        </div>
         <div class="form-group">
             <label th:for="daterange">가능날짜</label>
-            <input class="form-control" type="text" name="daterange" readonly/>
+            <input type="text" name="daterange"
+                   th:class="${#fields.hasErrors('startDate')}? 'form-control fieldError' : 'form-control'" readonly/>
             <input type="hidden" th:field="*{startDate}"/>
             <input type="hidden" th:field="*{endDate}"/>
+            <p th:if="${#fields.hasErrors('startDate')}"
+               th:errors="*{startDate}">Incorrect startDate</p>
         </div>
         <div class="form-group">
             <label th:for="pettype">돌봄 가능 펫</label>
             <br/>
-<!--            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
-                <input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-                <input type="hidden" name="_btncheck1" value="on"/>
-                <label class="btn btn-outline-primary" for="btncheck1">개</label>
-
-                <input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-                <input type="hidden" name="_btncheck2" value="on"/>
-                <label class="btn btn-outline-primary" for="btncheck2">고양이</label>
-            </div>-->
             <div class="form-check">
-                <input type="checkbox" id="dog" name="dog" value="true" />
+                <input type="checkbox" id="dog" name="dog" value="true" checked/>
                 <input type="hidden" name="_dog" value="on"/>
                 <label for="dog" class="form-check-label">개</label>
-                <input type="checkbox" id="cat" name="cat" value="true" />
+                <input type="checkbox" id="cat" name="cat" value="true" checked/>
                 <input type="hidden" name="_cat" value="on"/>
                 <label for="cat" class="form-check-label">고양이</label>
+                <p th:if="${#fields.hasErrors('dog')}"
+                   th:errors="*{dog}">Incorrect dog</p>
             </div>
-
         </div>
         <br>
         <div class="text-center">
