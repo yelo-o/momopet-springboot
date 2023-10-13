@@ -25,4 +25,5 @@
 - 상시 접속 url
   - jdbc:h2:tcp://localhost/~/momopet
 
-안녕하세요
+## ERD
+![모모펫-스프링부트](https://github.com/yelo-o/momopet-springboot/assets/64743180/837641cb-6182-4a08-970f-9ab2c0c19287)
