@@ -42,7 +42,7 @@ public class ReplyController {
             model.addAttribute("board", board);
             model.addAttribute("replies", replies); // 댓글 목록을 모델에 추가합니다.
         }
-        return "board";
+        return "redirect:/board/{id}";
     }
 
     @PostMapping("/board/{id}/reply")

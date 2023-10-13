@@ -167,7 +167,7 @@ public class BoardController {
             boardService.write(boardTemp);
 
             model.addAttribute("message", "작성글이 수정되었습니다.");
-            model.addAttribute("searchUrl", "/board/{id}");
+            model.addAttribute("searchUrl", "/board/view?id=" + id);
         } else  {
             model.addAttribute("message", "글 수정 권한이 없습니다.");
             model.addAttribute("searchUrl", "/board/list");
