@@ -54,7 +54,7 @@
 
             <div class="form-group">
                 사진 :
-                <input type="file" th:field="*{photo}" th:class="${#fields.hasErrors('photo')}? 'form-control fieldError' : 'form-control'" style="height: 100%">
+                <input type="file" accept=".gif, .jpg, .png" th:field="*{photo}" th:class="${#fields.hasErrors('photo')}? 'form-control fieldError' : 'form-control'" style="height: 100%">
                 <p th:if="${#fields.hasErrors('photo')}"
                    th:errors="*{photo}">Incorrect date</p>
             </div>

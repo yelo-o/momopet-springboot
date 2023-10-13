@@ -75,7 +75,7 @@
 
             <div class="col-sm-3">
                 <label class="form-label" th:for="photo">사진</label>
-                <input type="file" class="form-control" id="customFile" style="height: 100%"
+                <input type="file" accept=".gif, .jpg, .png" class="form-control" id="customFile" style="height: 100%"
                        th:field="*{photo}" th:class="${#fields.hasErrors('photo')}? 'form-control fieldError' : 'form-control'">
                 <p th:if="${#fields.hasErrors('photo')}"
                    th:errors="*{photo}">Incorrect date</p>
