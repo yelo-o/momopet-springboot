@@ -37,11 +37,17 @@ public class OrderController {
         Order order = new Order();
         order.setUser(findUser);
         order.setOrderDate(LocalDateTime.now());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime startDateTime = LocalDateTime.parse(form.getStartDate(), formatter);
-        LocalDateTime endDateTime = LocalDateTime.parse(form.getEndDate(), formatter);
-        order.setStartDate(startDateTime);
-        order.setEndDate(endDateTime);
+
+        if (form.getStartDate().isEmpty()) {
+            order.setStartDate(item.getStartDate());
+            order.setEndDate(item.getEndDate());
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime startDateTime = LocalDateTime.parse(form.getStartDate(), formatter);
+            LocalDateTime endDateTime = LocalDateTime.parse(form.getEndDate(), formatter);
+            order.setStartDate(startDateTime);
+            order.setEndDate(endDateTime);
+        }
         order.setStatus(OrderStatus.PENDING);
         log.info("스타트데이트: " + form.getStartDate());
         log.info("엔드데이트: " + form.getEndDate());
