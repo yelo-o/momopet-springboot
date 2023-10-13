@@ -33,10 +33,8 @@ public class BoardController {
     private BoardService boardService;
     @Autowired
     private MemberService memberService;
-
     @Autowired
     private final S3Service s3Service;
-
     @Autowired
     private final BoardRepository boardRepository;
 
