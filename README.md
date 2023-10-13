@@ -24,3 +24,5 @@
   - ~/momopet.mv.db
 - 상시 접속 url
   - jdbc:h2:tcp://localhost/~/momopet
+
+안녕하세요
