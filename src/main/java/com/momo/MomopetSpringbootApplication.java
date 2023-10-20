@@ -9,7 +9,7 @@ public class MomopetSpringbootApplication {
 
 	public static void main(String[] args) {
 //		SpringApplication.run(MomopetSpringbootApplication.class, args);
-		//설정한 값을 pid commend로 사용
+		//설정한 값을 pid command 사용
 		SpringApplication application = new SpringApplication(MomopetSpringbootApplication.class);
 		application.addListeners(new ApplicationPidFileWriter());
 		application.run(args);
