@@ -36,6 +36,10 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
+  # 배포 자동화 구성 전, 새로운 파일이 commit되면 이전 버전은 중단시킨 후 업데이트 된 jar을 실행하기 위해 먼저 pid commend값을 설정
+  pid:
+    file: /home/ec2-user/app/step2/springboot2-aws.pid
+
 logging:
   level:
     org.hibernate.SQL: debug
