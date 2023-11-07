@@ -21,6 +21,8 @@ public class Reply {
 
     private String text;
 
+    private String userName;        //추가내용
+
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;

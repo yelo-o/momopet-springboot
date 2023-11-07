@@ -60,6 +60,7 @@ public class ReplyController {
             Reply reply = new Reply();
             reply.setText(text);
             reply.setBoard(board);
+            reply.setUserName(user.getName());
             replyRepository.save(reply);
         }
         return "redirect:/board/{id}";
@@ -91,11 +92,10 @@ public class ReplyController {
     public String deleteReply1(@PathVariable Long id, @PathVariable Long replyId,
                               @LoginUser SessionUser sessionUser, Model model) {
         // 댓글 정보를 불러온다.
-        Board board = boardService.boardView(id);
         Reply reply = replyService.getReplyById(replyId);
 
         // 세션에 저장된 사용자 정보와 댓글 작성자의 이메일이 같은지 확인
-        if (sessionUser != null && sessionUser.getEmail().equals(board.getSitter().getEmail())) {
+        if (sessionUser != null && sessionUser.getName().equals(reply.getUserName())) {
             // 사용자 정보가 일치하면 댓글을 삭제한다.
             replyService.deleteReply(replyId);
 

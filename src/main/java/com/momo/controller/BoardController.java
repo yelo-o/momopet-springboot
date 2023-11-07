@@ -110,6 +110,13 @@ public class BoardController {
         int startPage = Math.max(nowPage - 4, 1);   //1보다 작게 나오면 1이 나오게 한다.
         int endPage= Math.min(nowPage + 5, list.getTotalPages());
 
+        //게시글이 하나도 없을 경우 페이징 0으로 출력
+        if (list.isEmpty()) {
+            nowPage = 0;
+            startPage = 0;
+            endPage = 0;
+        }
+
 
         model.addAttribute("list", list);
         model.addAttribute("nowPage",nowPage);
